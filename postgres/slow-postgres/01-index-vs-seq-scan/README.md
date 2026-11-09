@@ -1,6 +1,6 @@
 # Postgres not using your index? It's counting pages, not rows
 
-Code and raw numbers for part 1 of Slow Postgres. The article link goes here once it's live.
+Code and raw numbers for part 1 of Slow Postgres. The article is [on HackerNoon](https://hackernoon.com/postgres-not-using-your-index-its-counting-pages-not-rows).
 
 ![Query time against share of matching rows](charts/crossover.svg)
 

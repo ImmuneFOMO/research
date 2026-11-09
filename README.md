@@ -6,8 +6,8 @@ The benchmarks behind my articles. Each folder has the SQL, the scripts and the 
 
 **Slow Postgres**, a series on why a query gets slow and what to check first.
 
-1. [Postgres not using your index? It's counting pages, not rows](postgres/slow-postgres/01-index-vs-seq-scan)
+1. [Postgres not using your index? It's counting pages, not rows](https://hackernoon.com/postgres-not-using-your-index-its-counting-pages-not-rows) ([code](postgres/slow-postgres/01-index-vs-seq-scan))
 
 More parts are on the way.
 
-I write about this on [LinkedIn](https://www.linkedin.com/in/anatolii-zhadan/).
+All my articles are on [fomo.moe](https://fomo.moe).
