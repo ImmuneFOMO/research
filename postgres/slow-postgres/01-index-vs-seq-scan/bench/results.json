@@ -1,0 +1,1136 @@
+[
+ {
+  "table": "t_scattered",
+  "n": 100,
+  "fraction_pct": 0.01,
+  "planner_default": "Bitmap Heap Scan",
+  "planner_default_parallel_on": "Bitmap Heap Scan",
+  "paths": {
+   "seq": {
+    "node": "Seq Scan",
+    "est_cost": 104166.8,
+    "est_rows": 470,
+    "actual_rows": 493,
+    "shared_hit": 41667,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     116.83,
+     115.51,
+     116.389,
+     116.873,
+     116.703
+    ],
+    "median_ms": 116.703
+   },
+   "index": {
+    "node": "Index Scan",
+    "est_cost": 1884.44,
+    "est_rows": 470,
+    "actual_rows": 493,
+    "shared_hit": 496,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     0.109,
+     0.087,
+     0.084,
+     0.078,
+     0.076
+    ],
+    "median_ms": 0.084
+   },
+   "bitmap": {
+    "node": "Bitmap Heap Scan",
+    "est_cost": 1737.15,
+    "est_rows": 470,
+    "actual_rows": 493,
+    "shared_hit": 495,
+    "shared_read": 0,
+    "exact_heap_blocks": 492,
+    "lossy_heap_blocks": 0,
+    "times_ms": [
+     0.419,
+     0.165,
+     0.197,
+     0.149,
+     0.17
+    ],
+    "median_ms": 0.17
+   }
+  }
+ },
+ {
+  "table": "t_scattered",
+  "n": 1000,
+  "fraction_pct": 0.1,
+  "planner_default": "Bitmap Heap Scan",
+  "planner_default_parallel_on": "Bitmap Heap Scan",
+  "paths": {
+   "seq": {
+    "node": "Seq Scan",
+    "est_cost": 104166.8,
+    "est_rows": 4695,
+    "actual_rows": 5012,
+    "shared_hit": 41667,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     113.351,
+     113.98,
+     113.609,
+     114.21,
+     112.843
+    ],
+    "median_ms": 113.609
+   },
+   "index": {
+    "node": "Index Scan",
+    "est_cost": 17888.57,
+    "est_rows": 4695,
+    "actual_rows": 5012,
+    "shared_hit": 5021,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     3.465,
+     1.085,
+     0.997,
+     0.974,
+     0.966
+    ],
+    "median_ms": 0.997
+   },
+   "bitmap": {
+    "node": "Bitmap Heap Scan",
+    "est_cost": 13548.06,
+    "est_rows": 4695,
+    "actual_rows": 5012,
+    "shared_hit": 4757,
+    "shared_read": 0,
+    "exact_heap_blocks": 4747,
+    "lossy_heap_blocks": 0,
+    "times_ms": [
+     4.208,
+     3.53,
+     2.856,
+     2.52,
+     2.344
+    ],
+    "median_ms": 2.856
+   }
+  }
+ },
+ {
+  "table": "t_scattered",
+  "n": 5000,
+  "fraction_pct": 0.5,
+  "planner_default": "Bitmap Heap Scan",
+  "planner_default_parallel_on": "Bitmap Heap Scan",
+  "paths": {
+   "seq": {
+    "node": "Seq Scan",
+    "est_cost": 104166.8,
+    "est_rows": 23476,
+    "actual_rows": 24764,
+    "shared_hit": 41667,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     120.008,
+     119.957,
+     120.297,
+     121.607,
+     119.668
+    ],
+    "median_ms": 120.008
+   },
+   "index": {
+    "node": "Index Scan",
+    "est_cost": 73806.9,
+    "est_rows": 23476,
+    "actual_rows": 24764,
+    "shared_hit": 24800,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     14.805,
+     12.979,
+     11.922,
+     11.083,
+     10.837
+    ],
+    "median_ms": 11.922
+   },
+   "bitmap": {
+    "node": "Bitmap Heap Scan",
+    "est_cost": 37445.84,
+    "est_rows": 23476,
+    "actual_rows": 24764,
+    "shared_hit": 18716,
+    "shared_read": 0,
+    "exact_heap_blocks": 18678,
+    "lossy_heap_blocks": 0,
+    "times_ms": [
+     18.269,
+     17.777,
+     16.534,
+     16.913,
+     17.586
+    ],
+    "median_ms": 17.586
+   }
+  }
+ },
+ {
+  "table": "t_scattered",
+  "n": 10000,
+  "fraction_pct": 1.0,
+  "planner_default": "Bitmap Heap Scan",
+  "planner_default_parallel_on": "Bitmap Heap Scan",
+  "paths": {
+   "seq": {
+    "node": "Seq Scan",
+    "est_cost": 104166.8,
+    "est_rows": 46951,
+    "actual_rows": 49538,
+    "shared_hit": 41667,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     114.896,
+     114.759,
+     114.94,
+     114.344,
+     113.856
+    ],
+    "median_ms": 114.759
+   },
+   "index": {
+    "node": "Index Scan",
+    "est_cost": 121208.37,
+    "est_rows": 46951,
+    "actual_rows": 49538,
+    "shared_hit": 49610,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     33.989,
+     32.079,
+     31.168,
+     31.713,
+     29.263
+    ],
+    "median_ms": 31.713
+   },
+   "bitmap": {
+    "node": "Bitmap Heap Scan",
+    "est_cost": 44861.74,
+    "est_rows": 46951,
+    "actual_rows": 49538,
+    "shared_hit": 29217,
+    "shared_read": 0,
+    "exact_heap_blocks": 29143,
+    "lossy_heap_blocks": 0,
+    "times_ms": [
+     29.213,
+     28.944,
+     28.869,
+     28.431,
+     28.912
+    ],
+    "median_ms": 28.912
+   }
+  }
+ },
+ {
+  "table": "t_scattered",
+  "n": 20000,
+  "fraction_pct": 2.0,
+  "planner_default": "Bitmap Heap Scan",
+  "planner_default_parallel_on": "Bitmap Heap Scan",
+  "paths": {
+   "seq": {
+    "node": "Seq Scan",
+    "est_cost": 104166.8,
+    "est_rows": 100219,
+    "actual_rows": 99249,
+    "shared_hit": 41667,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     120.217,
+     119.512,
+     119.32,
+     116.6,
+     116.943
+    ],
+    "median_ms": 119.32
+   },
+   "index": {
+    "node": "Index Scan",
+    "est_cost": 168983.29,
+    "est_rows": 100219,
+    "actual_rows": 99249,
+    "shared_hit": 99390,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     61.338,
+     62.357,
+     59.357,
+     58.003,
+     58.693
+    ],
+    "median_ms": 59.357
+   },
+   "bitmap": {
+    "node": "Bitmap Heap Scan",
+    "est_cost": 44276.87,
+    "est_rows": 100219,
+    "actual_rows": 99249,
+    "shared_hit": 38084,
+    "shared_read": 0,
+    "exact_heap_blocks": 37939,
+    "lossy_heap_blocks": 0,
+    "times_ms": [
+     42.961,
+     43.878,
+     42.649,
+     42.827,
+     42.23
+    ],
+    "median_ms": 42.827
+   }
+  }
+ },
+ {
+  "table": "t_scattered",
+  "n": 50000,
+  "fraction_pct": 5.0,
+  "planner_default": "Bitmap Heap Scan",
+  "planner_default_parallel_on": "Bitmap Heap Scan",
+  "paths": {
+   "seq": {
+    "node": "Seq Scan",
+    "est_cost": 104166.8,
+    "est_rows": 244305,
+    "actual_rows": 249344,
+    "shared_hit": 41667,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     120.074,
+     120.845,
+     118.611,
+     118.63,
+     121.797
+    ],
+    "median_ms": 120.074
+   },
+   "index": {
+    "node": "Index Scan",
+    "est_cost": 172332.93,
+    "est_rows": 244305,
+    "actual_rows": 249344,
+    "shared_hit": 249689,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     179.946,
+     175.922,
+     175.528,
+     171.414,
+     175.5
+    ],
+    "median_ms": 175.528
+   },
+   "bitmap": {
+    "node": "Bitmap Heap Scan",
+    "est_cost": 48022.61,
+    "est_rows": 244305,
+    "actual_rows": 249344,
+    "shared_hit": 41949,
+    "shared_read": 0,
+    "exact_heap_blocks": 41588,
+    "lossy_heap_blocks": 0,
+    "times_ms": [
+     68.08,
+     66.897,
+     65.994,
+     65.305,
+     66.901
+    ],
+    "median_ms": 66.897
+   }
+  }
+ },
+ {
+  "table": "t_scattered",
+  "n": 100000,
+  "fraction_pct": 10.0,
+  "planner_default": "Bitmap Heap Scan",
+  "planner_default_parallel_on": "Bitmap Heap Scan",
+  "paths": {
+   "seq": {
+    "node": "Seq Scan",
+    "est_cost": 104166.8,
+    "est_rows": 486762,
+    "actual_rows": 498928,
+    "shared_hit": 41667,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     123.855,
+     123.511,
+     123.711,
+     123.445,
+     124.717
+    ],
+    "median_ms": 123.711
+   },
+   "index": {
+    "node": "Index Scan",
+    "est_cost": 177976.16,
+    "est_rows": 486762,
+    "actual_rows": 498928,
+    "shared_hit": 499611,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     335.819,
+     345.018,
+     331.059,
+     334.195,
+     284.236
+    ],
+    "median_ms": 334.195
+   },
+   "bitmap": {
+    "node": "Bitmap Heap Scan",
+    "est_cost": 54332.36,
+    "est_rows": 486762,
+    "actual_rows": 498928,
+    "shared_hit": 42386,
+    "shared_read": 0,
+    "exact_heap_blocks": 41667,
+    "lossy_heap_blocks": 0,
+    "times_ms": [
+     99.93,
+     98.745,
+     98.025,
+     98.009,
+     97.844
+    ],
+    "median_ms": 98.025
+   }
+  }
+ },
+ {
+  "table": "t_scattered",
+  "n": 250000,
+  "fraction_pct": 25.0,
+  "planner_default": "Bitmap Heap Scan",
+  "planner_default_parallel_on": "Bitmap Heap Scan",
+  "paths": {
+   "seq": {
+    "node": "Seq Scan",
+    "est_cost": 104166.8,
+    "est_rows": 1228269,
+    "actual_rows": 1249172,
+    "shared_hit": 41667,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     138.96,
+     137.815,
+     139.317,
+     139.805,
+     139.613
+    ],
+    "median_ms": 139.317
+   },
+   "index": {
+    "node": "Index Scan",
+    "est_cost": 195225.24,
+    "est_rows": 1228269,
+    "actual_rows": 1249172,
+    "shared_hit": 1250881,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     944.41,
+     960.479,
+     883.205,
+     779.86,
+     858.492
+    ],
+    "median_ms": 883.205
+   },
+   "bitmap": {
+    "node": "Bitmap Heap Scan",
+    "est_cost": 73619.88,
+    "est_rows": 1228269,
+    "actual_rows": 1249172,
+    "shared_hit": 43462,
+    "shared_read": 0,
+    "exact_heap_blocks": 41667,
+    "lossy_heap_blocks": 0,
+    "times_ms": [
+     178.036,
+     174.264,
+     173.767,
+     173.263,
+     173.903
+    ],
+    "median_ms": 173.903
+   }
+  }
+ },
+ {
+  "table": "t_scattered",
+  "n": 500000,
+  "fraction_pct": 50.0,
+  "planner_default": "Seq Scan",
+  "planner_default_parallel_on": "Seq Scan",
+  "paths": {
+   "seq": {
+    "node": "Seq Scan",
+    "est_cost": 104166.8,
+    "est_rows": 2481588,
+    "actual_rows": 2500130,
+    "shared_hit": 41667,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     160.2,
+     158.774,
+     159.613,
+     158.215,
+     158.103
+    ],
+    "median_ms": 158.774
+   },
+   "index": {
+    "node": "Index Scan",
+    "est_cost": 224379.52,
+    "est_rows": 2481588,
+    "actual_rows": 2500130,
+    "shared_hit": 2503561,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     1675.537,
+     1814.275,
+     1866.506,
+     1565.408,
+     1860.243
+    ],
+    "median_ms": 1814.275
+   },
+   "bitmap": {
+    "node": "Bitmap Heap Scan",
+    "est_cost": 106219.59,
+    "est_rows": 2481588,
+    "actual_rows": 2500130,
+    "shared_hit": 45256,
+    "shared_read": 0,
+    "exact_heap_blocks": 41667,
+    "lossy_heap_blocks": 0,
+    "times_ms": [
+     228.237,
+     230.132,
+     229.903,
+     232.675,
+     238.405
+    ],
+    "median_ms": 230.132
+   }
+  }
+ },
+ {
+  "table": "t_clustered",
+  "n": 100,
+  "fraction_pct": 0.01,
+  "planner_default": "Index Scan",
+  "planner_default_parallel_on": "Index Scan",
+  "paths": {
+   "seq": {
+    "node": "Seq Scan",
+    "est_cost": 104231.68,
+    "est_rows": 492,
+    "actual_rows": 493,
+    "shared_hit": 41728,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     120.833,
+     122.117,
+     121.675,
+     121.999,
+     121.344
+    ],
+    "median_ms": 121.675
+   },
+   "index": {
+    "node": "Index Scan",
+    "est_cost": 21.04,
+    "est_rows": 492,
+    "actual_rows": 493,
+    "shared_hit": 8,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     0.026,
+     0.025,
+     0.049,
+     0.025,
+     0.025
+    ],
+    "median_ms": 0.025
+   },
+   "bitmap": {
+    "node": "Bitmap Heap Scan",
+    "est_cost": 1815.1,
+    "est_rows": 492,
+    "actual_rows": 493,
+    "shared_hit": 8,
+    "shared_read": 0,
+    "exact_heap_blocks": 5,
+    "lossy_heap_blocks": 0,
+    "times_ms": [
+     0.024,
+     0.022,
+     0.022,
+     0.022,
+     0.022
+    ],
+    "median_ms": 0.022
+   }
+  }
+ },
+ {
+  "table": "t_clustered",
+  "n": 1000,
+  "fraction_pct": 0.1,
+  "planner_default": "Index Scan",
+  "planner_default_parallel_on": "Index Scan",
+  "paths": {
+   "seq": {
+    "node": "Seq Scan",
+    "est_cost": 104231.68,
+    "est_rows": 4925,
+    "actual_rows": 5012,
+    "shared_hit": 41728,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     119.954,
+     120.204,
+     117.469,
+     117.901,
+     116.452
+    ],
+    "median_ms": 117.901
+   },
+   "index": {
+    "node": "Index Scan",
+    "est_cost": 163.62,
+    "est_rows": 4925,
+    "actual_rows": 5012,
+    "shared_hit": 52,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     0.231,
+     0.227,
+     0.233,
+     0.225,
+     0.224
+    ],
+    "median_ms": 0.227
+   },
+   "bitmap": {
+    "node": "Bitmap Heap Scan",
+    "est_cost": 14077.87,
+    "est_rows": 4925,
+    "actual_rows": 5012,
+    "shared_hit": 52,
+    "shared_read": 0,
+    "exact_heap_blocks": 42,
+    "lossy_heap_blocks": 0,
+    "times_ms": [
+     0.223,
+     0.207,
+     0.212,
+     0.232,
+     0.206
+    ],
+    "median_ms": 0.212
+   }
+  }
+ },
+ {
+  "table": "t_clustered",
+  "n": 5000,
+  "fraction_pct": 0.5,
+  "planner_default": "Index Scan",
+  "planner_default_parallel_on": "Index Scan",
+  "paths": {
+   "seq": {
+    "node": "Seq Scan",
+    "est_cost": 104231.68,
+    "est_rows": 24623,
+    "actual_rows": 24764,
+    "shared_hit": 41728,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     119.921,
+     123.027,
+     120.703,
+     122.307,
+     121.06
+    ],
+    "median_ms": 121.06
+   },
+   "index": {
+    "node": "Index Scan",
+    "est_cost": 784.34,
+    "est_rows": 24623,
+    "actual_rows": 24764,
+    "shared_hit": 245,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     1.161,
+     1.146,
+     1.133,
+     1.131,
+     1.145
+    ],
+    "median_ms": 1.145
+   },
+   "bitmap": {
+    "node": "Bitmap Heap Scan",
+    "est_cost": 38194.0,
+    "est_rows": 24623,
+    "actual_rows": 24764,
+    "shared_hit": 245,
+    "shared_read": 0,
+    "exact_heap_blocks": 207,
+    "lossy_heap_blocks": 0,
+    "times_ms": [
+     1.057,
+     1.021,
+     1.077,
+     1.031,
+     1.038
+    ],
+    "median_ms": 1.038
+   }
+  }
+ },
+ {
+  "table": "t_clustered",
+  "n": 10000,
+  "fraction_pct": 1.0,
+  "planner_default": "Index Scan",
+  "planner_default_parallel_on": "Index Scan",
+  "paths": {
+   "seq": {
+    "node": "Seq Scan",
+    "est_cost": 104231.68,
+    "est_rows": 49247,
+    "actual_rows": 49538,
+    "shared_hit": 41728,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     120.125,
+     119.29,
+     119.024,
+     118.162,
+     120.108
+    ],
+    "median_ms": 119.29
+   },
+   "index": {
+    "node": "Index Scan",
+    "est_cost": 1560.25,
+    "est_rows": 49247,
+    "actual_rows": 49538,
+    "shared_hit": 487,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     2.56,
+     2.305,
+     2.234,
+     2.214,
+     2.202
+    ],
+    "median_ms": 2.234
+   },
+   "bitmap": {
+    "node": "Bitmap Heap Scan",
+    "est_cost": 45119.68,
+    "est_rows": 49247,
+    "actual_rows": 49538,
+    "shared_hit": 487,
+    "shared_read": 0,
+    "exact_heap_blocks": 413,
+    "lossy_heap_blocks": 0,
+    "times_ms": [
+     2.268,
+     2.239,
+     2.212,
+     2.104,
+     2.023
+    ],
+    "median_ms": 2.212
+   }
+  }
+ },
+ {
+  "table": "t_clustered",
+  "n": 20000,
+  "fraction_pct": 2.0,
+  "planner_default": "Index Scan",
+  "planner_default_parallel_on": "Index Scan",
+  "paths": {
+   "seq": {
+    "node": "Seq Scan",
+    "est_cost": 104231.68,
+    "est_rows": 98679,
+    "actual_rows": 99249,
+    "shared_hit": 41728,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     118.409,
+     117.324,
+     116.939,
+     116.996,
+     118.831
+    ],
+    "median_ms": 117.324
+   },
+   "index": {
+    "node": "Index Scan",
+    "est_cost": 3126.31,
+    "est_rows": 98679,
+    "actual_rows": 99249,
+    "shared_hit": 973,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     4.866,
+     4.773,
+     4.631,
+     4.546,
+     4.605
+    ],
+    "median_ms": 4.631
+   },
+   "bitmap": {
+    "node": "Bitmap Heap Scan",
+    "est_cost": 44298.68,
+    "est_rows": 98679,
+    "actual_rows": 99249,
+    "shared_hit": 973,
+    "shared_read": 0,
+    "exact_heap_blocks": 828,
+    "lossy_heap_blocks": 0,
+    "times_ms": [
+     4.775,
+     4.621,
+     4.545,
+     4.457,
+     4.511
+    ],
+    "median_ms": 4.545
+   }
+  }
+ },
+ {
+  "table": "t_clustered",
+  "n": 50000,
+  "fraction_pct": 5.0,
+  "planner_default": "Index Scan",
+  "planner_default_parallel_on": "Index Scan",
+  "paths": {
+   "seq": {
+    "node": "Seq Scan",
+    "est_cost": 104231.68,
+    "est_rows": 247724,
+    "actual_rows": 249344,
+    "shared_hit": 41728,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     119.304,
+     118.698,
+     118.042,
+     118.752,
+     120.562
+    ],
+    "median_ms": 118.752
+   },
+   "index": {
+    "node": "Index Scan",
+    "est_cost": 7834.6,
+    "est_rows": 247724,
+    "actual_rows": 249344,
+    "shared_hit": 2439,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     13.01,
+     13.402,
+     12.931,
+     12.859,
+     12.69
+    ],
+    "median_ms": 12.931
+   },
+   "bitmap": {
+    "node": "Bitmap Heap Scan",
+    "est_cost": 48172.84,
+    "est_rows": 247724,
+    "actual_rows": 249344,
+    "shared_hit": 2439,
+    "shared_read": 0,
+    "exact_heap_blocks": 2078,
+    "lossy_heap_blocks": 0,
+    "times_ms": [
+     12.48,
+     12.209,
+     12.034,
+     11.983,
+     12.002
+    ],
+    "median_ms": 12.034
+   }
+  }
+ },
+ {
+  "table": "t_clustered",
+  "n": 100000,
+  "fraction_pct": 10.0,
+  "planner_default": "Index Scan",
+  "planner_default_parallel_on": "Index Scan",
+  "paths": {
+   "seq": {
+    "node": "Seq Scan",
+    "est_cost": 104231.68,
+    "est_rows": 504631,
+    "actual_rows": 498928,
+    "shared_hit": 41728,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     121.082,
+     120.441,
+     121.658,
+     121.732,
+     123.254
+    ],
+    "median_ms": 121.658
+   },
+   "index": {
+    "node": "Index Scan",
+    "est_cost": 15954.48,
+    "est_rows": 504631,
+    "actual_rows": 498928,
+    "shared_hit": 4877,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     24.248,
+     24.27,
+     24.457,
+     24.066,
+     24.281
+    ],
+    "median_ms": 24.27
+   },
+   "bitmap": {
+    "node": "Bitmap Heap Scan",
+    "est_cost": 54855.21,
+    "est_rows": 504631,
+    "actual_rows": 498928,
+    "shared_hit": 4877,
+    "shared_read": 0,
+    "exact_heap_blocks": 4158,
+    "lossy_heap_blocks": 0,
+    "times_ms": [
+     24.205,
+     24.347,
+     24.265,
+     23.858,
+     24.133
+    ],
+    "median_ms": 24.205
+   }
+  }
+ },
+ {
+  "table": "t_clustered",
+  "n": 250000,
+  "fraction_pct": 25.0,
+  "planner_default": "Index Scan",
+  "planner_default_parallel_on": "Index Scan",
+  "paths": {
+   "seq": {
+    "node": "Seq Scan",
+    "est_cost": 104231.68,
+    "est_rows": 1243717,
+    "actual_rows": 1249172,
+    "shared_hit": 41728,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     128.201,
+     127.767,
+     128.371,
+     130.179,
+     131.231
+    ],
+    "median_ms": 128.371
+   },
+   "index": {
+    "node": "Index Scan",
+    "est_cost": 39315.48,
+    "est_rows": 1243717,
+    "actual_rows": 1249172,
+    "shared_hit": 12205,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     61.177,
+     60.95,
+     61.735,
+     61.579,
+     61.76
+    ],
+    "median_ms": 61.579
+   },
+   "bitmap": {
+    "node": "Bitmap Heap Scan",
+    "est_cost": 74081.7,
+    "est_rows": 1243717,
+    "actual_rows": 1249172,
+    "shared_hit": 12205,
+    "shared_read": 0,
+    "exact_heap_blocks": 10410,
+    "lossy_heap_blocks": 0,
+    "times_ms": [
+     62.148,
+     62.05,
+     62.105,
+     62.092,
+     62.904
+    ],
+    "median_ms": 62.105
+   }
+  }
+ },
+ {
+  "table": "t_clustered",
+  "n": 500000,
+  "fraction_pct": 50.0,
+  "planner_default": "Index Scan",
+  "planner_default_parallel_on": "Index Scan",
+  "paths": {
+   "seq": {
+    "node": "Seq Scan",
+    "est_cost": 104231.68,
+    "est_rows": 2507841,
+    "actual_rows": 2500130,
+    "shared_hit": 41728,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     141.404,
+     142.709,
+     142.006,
+     140.661,
+     141.669
+    ],
+    "median_ms": 141.669
+   },
+   "index": {
+    "node": "Index Scan",
+    "est_cost": 79271.65,
+    "est_rows": 2507841,
+    "actual_rows": 2500130,
+    "shared_hit": 24424,
+    "shared_read": 0,
+    "exact_heap_blocks": null,
+    "lossy_heap_blocks": null,
+    "times_ms": [
+     122.893,
+     122.869,
+     123.717,
+     122.275,
+     121.91
+    ],
+    "median_ms": 122.869
+   },
+   "bitmap": {
+    "node": "Bitmap Heap Scan",
+    "est_cost": 106964.21,
+    "est_rows": 2507841,
+    "actual_rows": 2500130,
+    "shared_hit": 24424,
+    "shared_read": 0,
+    "exact_heap_blocks": 20835,
+    "lossy_heap_blocks": 0,
+    "times_ms": [
+     124.042,
+     123.116,
+     123.978,
+     123.246,
+     123.378
+    ],
+    "median_ms": 123.378
+   }
+  }
+ }
+]

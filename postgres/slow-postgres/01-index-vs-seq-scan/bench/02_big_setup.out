@@ -1,0 +1,80 @@
+Pager usage is off.
+Timing is on.
+                                                       version                                                        
+----------------------------------------------------------------------------------------------------------------------
+ PostgreSQL 17.11 (Debian 17.11-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+(1 row)
+
+Time: 0.331 ms
+ shared_buffers 
+----------------
+ 2GB
+(1 row)
+
+Time: 0.052 ms
+ effective_cache_size 
+----------------------
+ 4GB
+(1 row)
+
+Time: 0.021 ms
+ random_page_cost 
+------------------
+ 4
+(1 row)
+
+Time: 0.051 ms
+ jit 
+-----
+ on
+(1 row)
+
+Time: 0.013 ms
+ max_parallel_workers_per_gather 
+---------------------------------
+ 2
+(1 row)
+
+Time: 0.014 ms
+CREATE EXTENSION
+Time: 1.576 ms
+NOTICE:  table "t_scattered" does not exist, skipping
+NOTICE:  table "t_clustered" does not exist, skipping
+DROP TABLE
+Time: 0.086 ms
+CREATE TABLE
+Time: 0.919 ms
+INSERT 0 5000000
+Time: 3605.403 ms (00:03.605)
+SELECT 5000000
+Time: 2243.297 ms (00:02.243)
+CREATE INDEX
+Time: 1068.293 ms (00:01.068)
+CREATE INDEX
+Time: 813.497 ms
+VACUUM
+Time: 218.988 ms
+VACUUM
+Time: 231.953 ms
+        relname         | relpages | reltuples |  size  
+------------------------+----------+-----------+--------
+ t_clustered            |    41728 |   5000294 | 326 MB
+ t_clustered_bucket_idx |     7202 |   5000294 | 56 MB
+ t_scattered            |    41667 |   4999984 | 326 MB
+ t_scattered_bucket_idx |     7202 |   4999984 | 56 MB
+(4 rows)
+
+Time: 0.738 ms
+ rows_per_page 
+---------------
+         120.0
+(1 row)
+
+Time: 0.246 ms
+  tablename  | attname | correlation 
+-------------+---------+-------------
+ t_scattered | bucket  | 0.010697046
+ t_clustered | bucket  |           1
+(2 rows)
+
+Time: 1.235 ms

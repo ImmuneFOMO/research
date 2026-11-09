@@ -1,0 +1,344 @@
+Pager usage is off.
+== version
+                                                       version                                                        
+----------------------------------------------------------------------------------------------------------------------
+ PostgreSQL 17.11 (Debian 17.11-1.pgdg13+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+(1 row)
+
+ shared_buffers 
+----------------
+ 128MB
+(1 row)
+
+ random_page_cost 
+------------------
+ 4
+(1 row)
+
+ seq_page_cost 
+---------------
+ 1
+(1 row)
+
+ cpu_tuple_cost 
+----------------
+ 0.01
+(1 row)
+
+ cpu_operator_cost 
+-------------------
+ 0.0025
+(1 row)
+
+ default_statistics_target 
+---------------------------
+ 100
+(1 row)
+
+ effective_cache_size 
+----------------------
+ 4GB
+(1 row)
+
+NOTICE:  table "orders" does not exist, skipping
+NOTICE:  table "orders_small" does not exist, skipping
+DROP TABLE
+CREATE TABLE
+INSERT 0 30000
+CREATE INDEX
+ANALYZE
+VACUUM
+ANALYZE
+== relpages
+ relpages | reltuples 
+----------+-----------
+      221 |     30000
+(1 row)
+
+== index pages
+      relname      | relpages 
+-------------------+----------
+ orders_pkey       |       84
+ orders_status_idx |       28
+(2 rows)
+
+== row size / rows per page
+ avg_row_datum_bytes 
+---------------------
+                49.3
+(1 row)
+
+ max_rows_per_page | min_rows_per_page 
+-------------------+-------------------
+               136 |                80
+(1 row)
+
+ heap_bytes | pg_size_pretty 
+------------+----------------
+    1810432 | 1768 kB
+(1 row)
+
+== ctid sample
+  ctid   |  id  |   status   
+---------+------+------------
+ (7,48)  | 1000 | chargeback
+ (14,96) | 2000 | chargeback
+ (22,8)  | 3000 | chargeback
+(3 rows)
+
+== EXPLAIN paid (default)
+                         QUERY PLAN                          
+-------------------------------------------------------------
+ Seq Scan on orders  (cost=0.00..596.00 rows=27000 width=25)
+   Filter: (status = 'paid'::text)
+(2 rows)
+
+== EXPLAIN paid, enable_seqscan off
+SET
+                                      QUERY PLAN                                      
+--------------------------------------------------------------------------------------
+ Bitmap Heap Scan on orders  (cost=313.54..872.04 rows=27000 width=25)
+   Recheck Cond: (status = 'paid'::text)
+   ->  Bitmap Index Scan on orders_status_idx  (cost=0.00..306.79 rows=27000 width=0)
+         Index Cond: (status = 'paid'::text)
+(4 rows)
+
+                                                             QUERY PLAN                                                             
+------------------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on orders  (cost=313.54..872.04 rows=27000 width=25) (actual time=0.383..1.747 rows=27000 loops=1)
+   Recheck Cond: (status = 'paid'::text)
+   Heap Blocks: exact=221
+   Buffers: shared hit=222 read=24
+   ->  Bitmap Index Scan on orders_status_idx  (cost=0.00..306.79 rows=27000 width=0) (actual time=0.364..0.364 rows=27000 loops=1)
+         Index Cond: (status = 'paid'::text)
+         Buffers: shared hit=1 read=24
+ Planning Time: 0.005 ms
+ Execution Time: 2.459 ms
+(9 rows)
+
+RESET
+                                                QUERY PLAN                                                 
+-----------------------------------------------------------------------------------------------------------
+ Seq Scan on orders  (cost=0.00..596.00 rows=27000 width=25) (actual time=0.003..1.608 rows=27000 loops=1)
+   Filter: (status = 'paid'::text)
+   Rows Removed by Filter: 3000
+   Buffers: shared hit=221
+ Planning Time: 0.011 ms
+ Execution Time: 2.311 ms
+(6 rows)
+
+== rows vs pages
+   status   | rows  | pages 
+------------+-------+-------
+ paid       | 27000 |   221
+ created    |  2700 |   221
+ failed     |   270 |   207
+ chargeback |    30 |    30
+(4 rows)
+
+== failed: default plan + buffers
+                                     QUERY PLAN                                      
+-------------------------------------------------------------------------------------
+ Index Scan using orders_status_idx on orders  (cost=0.29..234.62 rows=270 width=25)
+   Index Cond: (status = 'failed'::text)
+(2 rows)
+
+                                                           QUERY PLAN                                                            
+---------------------------------------------------------------------------------------------------------------------------------
+ Index Scan using orders_status_idx on orders  (cost=0.29..234.62 rows=270 width=25) (actual time=0.019..0.173 rows=270 loops=1)
+   Index Cond: (status = 'failed'::text)
+   Buffers: shared hit=209
+ Planning Time: 0.034 ms
+ Execution Time: 0.187 ms
+(5 rows)
+
+== failed: forced seq
+SET
+SET
+                                              QUERY PLAN                                               
+-------------------------------------------------------------------------------------------------------
+ Seq Scan on orders  (cost=0.00..596.00 rows=270 width=25) (actual time=0.007..0.916 rows=270 loops=1)
+   Filter: (status = 'failed'::text)
+   Rows Removed by Filter: 29730
+   Buffers: shared hit=221
+ Planning Time: 0.018 ms
+ Execution Time: 0.926 ms
+(6 rows)
+
+RESET
+RESET
+== chargeback: default plan + buffers
+                                    QUERY PLAN                                     
+-----------------------------------------------------------------------------------
+ Index Scan using orders_status_idx on orders  (cost=0.29..45.86 rows=30 width=25)
+   Index Cond: (status = 'chargeback'::text)
+(2 rows)
+
+                                                          QUERY PLAN                                                          
+------------------------------------------------------------------------------------------------------------------------------
+ Index Scan using orders_status_idx on orders  (cost=0.29..45.86 rows=30 width=25) (actual time=0.006..0.018 rows=30 loops=1)
+   Index Cond: (status = 'chargeback'::text)
+   Buffers: shared hit=32
+ Planning Time: 0.007 ms
+ Execution Time: 0.020 ms
+(5 rows)
+
+== chargeback: forced seq
+SET
+SET
+                        QUERY PLAN                        
+----------------------------------------------------------
+ Seq Scan on orders  (cost=0.00..596.00 rows=30 width=25)
+   Filter: (status = 'chargeback'::text)
+(2 rows)
+
+                                             QUERY PLAN                                              
+-----------------------------------------------------------------------------------------------------
+ Seq Scan on orders  (cost=0.00..596.00 rows=30 width=25) (actual time=0.034..0.869 rows=30 loops=1)
+   Filter: (status = 'chargeback'::text)
+   Rows Removed by Filter: 29970
+   Buffers: shared hit=221
+ Planning Time: 0.009 ms
+ Execution Time: 0.872 ms
+(6 rows)
+
+RESET
+RESET
+== pg_stats
+ null_frac | n_distinct |         most_common_vals         |   most_common_freqs    | correlation 
+-----------+------------+----------------------------------+------------------------+-------------
+         0 |          4 | {paid,created,failed,chargeback} | {0.9,0.09,0.009,0.001} |   0.8180821
+(1 row)
+
+== small table
+SELECT 200
+CREATE INDEX
+VACUUM
+ relpages | reltuples 
+----------+-----------
+        2 |       200
+(1 row)
+
+ failed_rows 
+-------------
+           2
+(1 row)
+
+                         QUERY PLAN                          
+-------------------------------------------------------------
+ Seq Scan on orders_small  (cost=0.00..4.50 rows=2 width=25)
+   Filter: (status = 'failed'::text)
+(2 rows)
+
+                                              QUERY PLAN                                               
+-------------------------------------------------------------------------------------------------------
+ Seq Scan on orders_small  (cost=0.00..4.50 rows=2 width=25) (actual time=0.005..0.008 rows=2 loops=1)
+   Filter: (status = 'failed'::text)
+   Rows Removed by Filter: 198
+   Buffers: shared hit=2
+ Planning Time: 0.007 ms
+ Execution Time: 0.010 ms
+(6 rows)
+
+SET
+                                                           QUERY PLAN                                                           
+--------------------------------------------------------------------------------------------------------------------------------
+ Bitmap Heap Scan on orders_small  (cost=4.16..6.19 rows=2 width=25) (actual time=0.017..0.018 rows=2 loops=1)
+   Recheck Cond: (status = 'failed'::text)
+   Heap Blocks: exact=2
+   Buffers: shared hit=2 read=1
+   ->  Bitmap Index Scan on orders_small_status_idx  (cost=0.00..4.16 rows=2 width=0) (actual time=0.014..0.014 rows=2 loops=1)
+         Index Cond: (status = 'failed'::text)
+         Buffers: shared read=1
+ Planning Time: 0.022 ms
+ Execution Time: 0.024 ms
+(9 rows)
+
+RESET
+SET
+                                         QUERY PLAN                                          
+---------------------------------------------------------------------------------------------
+ Index Scan using orders_small_status_idx on orders_small  (cost=0.14..2.77 rows=2 width=25)
+   Index Cond: (status = 'failed'::text)
+(2 rows)
+
+                                                              QUERY PLAN                                                               
+---------------------------------------------------------------------------------------------------------------------------------------
+ Index Scan using orders_small_status_idx on orders_small  (cost=0.14..2.77 rows=2 width=25) (actual time=0.002..0.003 rows=2 loops=1)
+   Index Cond: (status = 'failed'::text)
+   Buffers: shared hit=3
+ Planning Time: 0.005 ms
+ Execution Time: 0.005 ms
+(5 rows)
+
+== random_page_cost 1.1 on big orders
+                                     QUERY PLAN                                     
+------------------------------------------------------------------------------------
+ Index Scan using orders_status_idx on orders  (cost=0.29..68.64 rows=270 width=25)
+   Index Cond: (status = 'failed'::text)
+(2 rows)
+
+                                      QUERY PLAN                                      
+--------------------------------------------------------------------------------------
+ Index Scan using orders_status_idx on orders  (cost=0.29..144.69 rows=2700 width=25)
+   Index Cond: (status = 'created'::text)
+(2 rows)
+
+                         QUERY PLAN                          
+-------------------------------------------------------------
+ Seq Scan on orders  (cost=0.00..596.00 rows=27000 width=25)
+   Filter: (status = 'paid'::text)
+(2 rows)
+
+RESET
+== created default
+                                     QUERY PLAN                                     
+------------------------------------------------------------------------------------
+ Bitmap Heap Scan on orders  (cost=33.21..287.96 rows=2700 width=25)
+   Recheck Cond: (status = 'created'::text)
+   ->  Bitmap Index Scan on orders_status_idx  (cost=0.00..32.54 rows=2700 width=0)
+         Index Cond: (status = 'created'::text)
+(4 rows)
+
+== partial index
+CREATE INDEX
+ANALYZE
+          relname           | relpages | reltuples 
+----------------------------+----------+-----------
+ orders_status_idx          |       28 |     30000
+ orders_status_not_paid_idx |        5 |      3000
+(2 rows)
+
+ full_idx | partial_idx 
+----------+-------------
+ 224 kB   | 40 kB
+(1 row)
+
+DROP INDEX
+                                         QUERY PLAN                                         
+--------------------------------------------------------------------------------------------
+ Index Scan using orders_status_not_paid_idx on orders  (cost=0.28..45.85 rows=30 width=25)
+   Index Cond: (status = 'chargeback'::text)
+(2 rows)
+
+                         QUERY PLAN                          
+-------------------------------------------------------------
+ Seq Scan on orders  (cost=0.00..596.00 rows=27000 width=25)
+   Filter: (status = 'paid'::text)
+(2 rows)
+
+PREPARE
+SET
+                         QUERY PLAN                         
+------------------------------------------------------------
+ Seq Scan on orders  (cost=0.00..596.00 rows=7500 width=25)
+   Filter: (status = $1)
+(2 rows)
+
+RESET
+                                         QUERY PLAN                                         
+--------------------------------------------------------------------------------------------
+ Index Scan using orders_status_not_paid_idx on orders  (cost=0.28..45.85 rows=30 width=25)
+   Index Cond: (status = 'chargeback'::text)
+(2 rows)
+

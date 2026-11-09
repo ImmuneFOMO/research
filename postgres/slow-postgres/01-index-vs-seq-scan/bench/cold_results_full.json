@@ -1,0 +1,767 @@
+[
+ {
+  "table": "t_scattered",
+  "n": 100,
+  "fraction_pct": 0.01,
+  "path": "seq",
+  "node": "Seq Scan",
+  "shared_hit": 0,
+  "shared_read": 41667,
+  "times_ms": [
+   258.46,
+   254.397,
+   275.918,
+   258.21,
+   352.991
+  ],
+  "median_ms": 258.46
+ },
+ {
+  "table": "t_scattered",
+  "n": 100,
+  "fraction_pct": 0.01,
+  "path": "index",
+  "node": "Index Scan",
+  "shared_hit": 4,
+  "shared_read": 492,
+  "times_ms": [
+   17.967,
+   26.623,
+   25.521,
+   20.921,
+   23.308
+  ],
+  "median_ms": 23.308
+ },
+ {
+  "table": "t_scattered",
+  "n": 100,
+  "fraction_pct": 0.01,
+  "path": "bitmap",
+  "node": "Bitmap Heap Scan",
+  "shared_hit": 3,
+  "shared_read": 492,
+  "times_ms": [
+   24.873,
+   19.991,
+   18.267,
+   17.084,
+   19.677
+  ],
+  "median_ms": 19.677
+ },
+ {
+  "table": "t_scattered",
+  "n": 1000,
+  "fraction_pct": 0.1,
+  "path": "seq",
+  "node": "Seq Scan",
+  "shared_hit": 0,
+  "shared_read": 41667,
+  "times_ms": [
+   256.567,
+   253.982,
+   253.214,
+   252.425,
+   255.34
+  ],
+  "median_ms": 253.982
+ },
+ {
+  "table": "t_scattered",
+  "n": 1000,
+  "fraction_pct": 0.1,
+  "path": "index",
+  "node": "Index Scan",
+  "shared_hit": 267,
+  "shared_read": 4754,
+  "times_ms": [
+   190.707,
+   242.887,
+   170.078,
+   166.826,
+   167.525
+  ],
+  "median_ms": 170.078
+ },
+ {
+  "table": "t_scattered",
+  "n": 1000,
+  "fraction_pct": 0.1,
+  "path": "bitmap",
+  "node": "Bitmap Heap Scan",
+  "shared_hit": 3,
+  "shared_read": 4754,
+  "times_ms": [
+   173.85,
+   185.06,
+   197.006,
+   163.706,
+   231.271
+  ],
+  "median_ms": 185.06
+ },
+ {
+  "table": "t_scattered",
+  "n": 5000,
+  "fraction_pct": 0.5,
+  "path": "seq",
+  "node": "Seq Scan",
+  "shared_hit": 0,
+  "shared_read": 41667,
+  "times_ms": [
+   348.897,
+   263.178,
+   352.725,
+   253.686,
+   354.787
+  ],
+  "median_ms": 348.897
+ },
+ {
+  "table": "t_scattered",
+  "n": 5000,
+  "fraction_pct": 0.5,
+  "path": "index",
+  "node": "Index Scan",
+  "shared_hit": 6087,
+  "shared_read": 18713,
+  "times_ms": [
+   769.37,
+   828.8,
+   835.569,
+   782.886,
+   850.893
+  ],
+  "median_ms": 828.8
+ },
+ {
+  "table": "t_scattered",
+  "n": 5000,
+  "fraction_pct": 0.5,
+  "path": "bitmap",
+  "node": "Bitmap Heap Scan",
+  "shared_hit": 3,
+  "shared_read": 18713,
+  "times_ms": [
+   747.504,
+   675.262,
+   807.478,
+   678.33,
+   800.104
+  ],
+  "median_ms": 747.504
+ },
+ {
+  "table": "t_scattered",
+  "n": 10000,
+  "fraction_pct": 1.0,
+  "path": "seq",
+  "node": "Seq Scan",
+  "shared_hit": 0,
+  "shared_read": 41667,
+  "times_ms": [
+   253.294,
+   268.691,
+   255.1,
+   250.353,
+   257.928
+  ],
+  "median_ms": 255.1
+ },
+ {
+  "table": "t_scattered",
+  "n": 10000,
+  "fraction_pct": 1.0,
+  "path": "index",
+  "node": "Index Scan",
+  "shared_hit": 20396,
+  "shared_read": 29214,
+  "times_ms": [
+   996.586,
+   1385.13,
+   1188.217,
+   1180.584,
+   1190.36
+  ],
+  "median_ms": 1188.217
+ },
+ {
+  "table": "t_scattered",
+  "n": 10000,
+  "fraction_pct": 1.0,
+  "path": "bitmap",
+  "node": "Bitmap Heap Scan",
+  "shared_hit": 3,
+  "shared_read": 29214,
+  "times_ms": [
+   1274.761,
+   1253.479,
+   1114.479,
+   1432.217,
+   1309.039
+  ],
+  "median_ms": 1274.761
+ },
+ {
+  "table": "t_scattered",
+  "n": 20000,
+  "fraction_pct": 2.0,
+  "path": "seq",
+  "node": "Seq Scan",
+  "shared_hit": 0,
+  "shared_read": 41667,
+  "times_ms": [
+   306.477,
+   370.316,
+   369.074,
+   264.985,
+   254.088
+  ],
+  "median_ms": 306.477
+ },
+ {
+  "table": "t_scattered",
+  "n": 20000,
+  "fraction_pct": 2.0,
+  "path": "index",
+  "node": "Index Scan",
+  "shared_hit": 61306,
+  "shared_read": 38084,
+  "times_ms": [
+   1486.812,
+   1312.097,
+   1201.219,
+   1310.818,
+   1441.88
+  ],
+  "median_ms": 1312.097
+ },
+ {
+  "table": "t_scattered",
+  "n": 20000,
+  "fraction_pct": 2.0,
+  "path": "bitmap",
+  "node": "Bitmap Heap Scan",
+  "shared_hit": 0,
+  "shared_read": 38084,
+  "times_ms": [
+   218.834,
+   187.274,
+   190.31,
+   209.069,
+   188.68
+  ],
+  "median_ms": 190.31
+ },
+ {
+  "table": "t_scattered",
+  "n": 50000,
+  "fraction_pct": 5.0,
+  "path": "seq",
+  "node": "Seq Scan",
+  "shared_hit": 0,
+  "shared_read": 41667,
+  "times_ms": [
+   266.879,
+   276.404,
+   264.628,
+   258.86,
+   269.82
+  ],
+  "median_ms": 266.879
+ },
+ {
+  "table": "t_scattered",
+  "n": 50000,
+  "fraction_pct": 5.0,
+  "path": "index",
+  "node": "Index Scan",
+  "shared_hit": 207740,
+  "shared_read": 41949,
+  "times_ms": [
+   1620.623,
+   1436.606,
+   1471.419,
+   1666.472,
+   1534.899
+  ],
+  "median_ms": 1534.899
+ },
+ {
+  "table": "t_scattered",
+  "n": 50000,
+  "fraction_pct": 5.0,
+  "path": "bitmap",
+  "node": "Bitmap Heap Scan",
+  "shared_hit": 0,
+  "shared_read": 41949,
+  "times_ms": [
+   281.506,
+   237.88,
+   347.308,
+   220.637,
+   221.539
+  ],
+  "median_ms": 237.88
+ },
+ {
+  "table": "t_scattered",
+  "n": 100000,
+  "fraction_pct": 10.0,
+  "path": "seq",
+  "node": "Seq Scan",
+  "shared_hit": 0,
+  "shared_read": 41667,
+  "times_ms": [
+   280.586,
+   288.443,
+   293.35,
+   284.505,
+   275.648
+  ],
+  "median_ms": 284.505
+ },
+ {
+  "table": "t_scattered",
+  "n": 100000,
+  "fraction_pct": 10.0,
+  "path": "index",
+  "node": "Index Scan",
+  "shared_hit": 457225,
+  "shared_read": 42386,
+  "times_ms": [
+   1734.973,
+   1643.088,
+   1840.956,
+   1754.946,
+   1792.284
+  ],
+  "median_ms": 1754.946
+ },
+ {
+  "table": "t_scattered",
+  "n": 100000,
+  "fraction_pct": 10.0,
+  "path": "bitmap",
+  "node": "Bitmap Heap Scan",
+  "shared_hit": 0,
+  "shared_read": 42386,
+  "times_ms": [
+   266.245,
+   249.747,
+   239.919,
+   237.367,
+   339.23
+  ],
+  "median_ms": 249.747
+ },
+ {
+  "table": "t_scattered",
+  "n": 250000,
+  "fraction_pct": 25.0,
+  "path": "seq",
+  "node": "Seq Scan",
+  "shared_hit": 0,
+  "shared_read": 41667,
+  "times_ms": [
+   379.842,
+   277.951,
+   303.718,
+   280.403,
+   383.274
+  ],
+  "median_ms": 303.718
+ },
+ {
+  "table": "t_scattered",
+  "n": 250000,
+  "fraction_pct": 25.0,
+  "path": "index",
+  "node": "Index Scan",
+  "shared_hit": 1207419,
+  "shared_read": 43462,
+  "times_ms": [
+   2075.839,
+   2171.184,
+   2124.667,
+   2276.65,
+   2228.543
+  ],
+  "median_ms": 2171.184
+ },
+ {
+  "table": "t_scattered",
+  "n": 250000,
+  "fraction_pct": 25.0,
+  "path": "bitmap",
+  "node": "Bitmap Heap Scan",
+  "shared_hit": 0,
+  "shared_read": 43462,
+  "times_ms": [
+   352.874,
+   298.03,
+   287.999,
+   410.786,
+   303.133
+  ],
+  "median_ms": 303.133
+ },
+ {
+  "table": "t_scattered",
+  "n": 500000,
+  "fraction_pct": 50.0,
+  "path": "seq",
+  "node": "Seq Scan",
+  "shared_hit": 0,
+  "shared_read": 41667,
+  "times_ms": [
+   415.252,
+   307.05,
+   300.586,
+   306.121,
+   307.942
+  ],
+  "median_ms": 307.05
+ },
+ {
+  "table": "t_scattered",
+  "n": 500000,
+  "fraction_pct": 50.0,
+  "path": "index",
+  "node": "Index Scan",
+  "shared_hit": 2458305,
+  "shared_read": 45256,
+  "times_ms": [
+   3185.942,
+   2960.005,
+   2916.5,
+   3265.643,
+   3236.695
+  ],
+  "median_ms": 3185.942
+ },
+ {
+  "table": "t_scattered",
+  "n": 500000,
+  "fraction_pct": 50.0,
+  "path": "bitmap",
+  "node": "Bitmap Heap Scan",
+  "shared_hit": 0,
+  "shared_read": 45256,
+  "times_ms": [
+   533.503,
+   492.366,
+   372.808,
+   373.221,
+   361.984
+  ],
+  "median_ms": 373.221
+ },
+ {
+  "table": "t_clustered",
+  "n": 100,
+  "fraction_pct": 0.01,
+  "path": "seq",
+  "node": "Seq Scan",
+  "shared_hit": 0,
+  "shared_read": 41728,
+  "times_ms": [
+   267.293,
+   255.569,
+   256.383,
+   264.597,
+   257.478
+  ],
+  "median_ms": 257.478
+ },
+ {
+  "table": "t_clustered",
+  "n": 100,
+  "fraction_pct": 0.01,
+  "path": "index",
+  "node": "Index Scan",
+  "shared_hit": 3,
+  "shared_read": 5,
+  "times_ms": [
+   0.216,
+   0.216,
+   0.201,
+   0.219,
+   0.353
+  ],
+  "median_ms": 0.216
+ },
+ {
+  "table": "t_clustered",
+  "n": 1000,
+  "fraction_pct": 0.1,
+  "path": "seq",
+  "node": "Seq Scan",
+  "shared_hit": 0,
+  "shared_read": 41728,
+  "times_ms": [
+   264.195,
+   255.12,
+   255.812,
+   255.173,
+   252.226
+  ],
+  "median_ms": 255.173
+ },
+ {
+  "table": "t_clustered",
+  "n": 1000,
+  "fraction_pct": 0.1,
+  "path": "index",
+  "node": "Index Scan",
+  "shared_hit": 3,
+  "shared_read": 49,
+  "times_ms": [
+   0.689,
+   1.186,
+   0.729,
+   1.129,
+   0.686
+  ],
+  "median_ms": 0.729
+ },
+ {
+  "table": "t_clustered",
+  "n": 5000,
+  "fraction_pct": 0.5,
+  "path": "seq",
+  "node": "Seq Scan",
+  "shared_hit": 0,
+  "shared_read": 41728,
+  "times_ms": [
+   260.074,
+   262.68,
+   259.236,
+   263.399,
+   361.868
+  ],
+  "median_ms": 262.68
+ },
+ {
+  "table": "t_clustered",
+  "n": 5000,
+  "fraction_pct": 0.5,
+  "path": "index",
+  "node": "Index Scan",
+  "shared_hit": 3,
+  "shared_read": 242,
+  "times_ms": [
+   2.542,
+   2.634,
+   2.613,
+   2.616,
+   3.721
+  ],
+  "median_ms": 2.616
+ },
+ {
+  "table": "t_clustered",
+  "n": 10000,
+  "fraction_pct": 1.0,
+  "path": "seq",
+  "node": "Seq Scan",
+  "shared_hit": 0,
+  "shared_read": 41728,
+  "times_ms": [
+   267.079,
+   282.565,
+   270.376,
+   360.92,
+   254.414
+  ],
+  "median_ms": 270.376
+ },
+ {
+  "table": "t_clustered",
+  "n": 10000,
+  "fraction_pct": 1.0,
+  "path": "index",
+  "node": "Index Scan",
+  "shared_hit": 3,
+  "shared_read": 484,
+  "times_ms": [
+   4.602,
+   4.731,
+   4.552,
+   4.849,
+   5.174
+  ],
+  "median_ms": 4.731
+ },
+ {
+  "table": "t_clustered",
+  "n": 20000,
+  "fraction_pct": 2.0,
+  "path": "seq",
+  "node": "Seq Scan",
+  "shared_hit": 0,
+  "shared_read": 41728,
+  "times_ms": [
+   358.065,
+   259.542,
+   255.499,
+   255.383,
+   261.526
+  ],
+  "median_ms": 259.542
+ },
+ {
+  "table": "t_clustered",
+  "n": 20000,
+  "fraction_pct": 2.0,
+  "path": "index",
+  "node": "Index Scan",
+  "shared_hit": 0,
+  "shared_read": 973,
+  "times_ms": [
+   10.159,
+   11.907,
+   9.981,
+   9.04,
+   8.943
+  ],
+  "median_ms": 9.981
+ },
+ {
+  "table": "t_clustered",
+  "n": 50000,
+  "fraction_pct": 5.0,
+  "path": "seq",
+  "node": "Seq Scan",
+  "shared_hit": 0,
+  "shared_read": 41728,
+  "times_ms": [
+   260.815,
+   261.936,
+   262.497,
+   272.245,
+   266.536
+  ],
+  "median_ms": 262.497
+ },
+ {
+  "table": "t_clustered",
+  "n": 50000,
+  "fraction_pct": 5.0,
+  "path": "index",
+  "node": "Index Scan",
+  "shared_hit": 0,
+  "shared_read": 2439,
+  "times_ms": [
+   22.263,
+   22.825,
+   29.657,
+   24.976,
+   23.001
+  ],
+  "median_ms": 23.001
+ },
+ {
+  "table": "t_clustered",
+  "n": 100000,
+  "fraction_pct": 10.0,
+  "path": "seq",
+  "node": "Seq Scan",
+  "shared_hit": 0,
+  "shared_read": 41728,
+  "times_ms": [
+   268.199,
+   264.531,
+   334.375,
+   274.09,
+   272.872
+  ],
+  "median_ms": 272.872
+ },
+ {
+  "table": "t_clustered",
+  "n": 100000,
+  "fraction_pct": 10.0,
+  "path": "index",
+  "node": "Index Scan",
+  "shared_hit": 0,
+  "shared_read": 4877,
+  "times_ms": [
+   56.856,
+   43.627,
+   46.277,
+   43.958,
+   44.991
+  ],
+  "median_ms": 44.991
+ },
+ {
+  "table": "t_clustered",
+  "n": 250000,
+  "fraction_pct": 25.0,
+  "path": "seq",
+  "node": "Seq Scan",
+  "shared_hit": 0,
+  "shared_read": 41728,
+  "times_ms": [
+   270.929,
+   289.068,
+   286.09,
+   280.983,
+   288.657
+  ],
+  "median_ms": 286.09
+ },
+ {
+  "table": "t_clustered",
+  "n": 250000,
+  "fraction_pct": 25.0,
+  "path": "index",
+  "node": "Index Scan",
+  "shared_hit": 0,
+  "shared_read": 12205,
+  "times_ms": [
+   118.626,
+   131.228,
+   143.592,
+   144.874,
+   144.463
+  ],
+  "median_ms": 143.592
+ },
+ {
+  "table": "t_clustered",
+  "n": 500000,
+  "fraction_pct": 50.0,
+  "path": "seq",
+  "node": "Seq Scan",
+  "shared_hit": 0,
+  "shared_read": 41728,
+  "times_ms": [
+   292.839,
+   389.996,
+   391.043,
+   278.189,
+   287.767
+  ],
+  "median_ms": 292.839
+ },
+ {
+  "table": "t_clustered",
+  "n": 500000,
+  "fraction_pct": 50.0,
+  "path": "index",
+  "node": "Index Scan",
+  "shared_hit": 0,
+  "shared_read": 24424,
+  "times_ms": [
+   212.066,
+   231.865,
+   230.187,
+   215.653,
+   285.006
+  ],
+  "median_ms": 230.187
+ }
+]
