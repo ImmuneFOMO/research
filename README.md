@@ -1,6 +1,6 @@
 # research
 
-The benchmarks behind my articles. Each folder has the SQL, the scripts and the raw output, so you can check my numbers or run them on your own hardware.
+The benchmarks behind my articles. Each folder has the code, the setup and the raw output, so you can check my numbers or run them on your own hardware.
 
 ## Postgres
 
