@@ -1,0 +1,217 @@
+{
+ "report": {
+  "settings": "",
+  "sql": "SELECT o.status, count(*) AS orders, sum(o.amount_cents) AS cents\nFROM users u JOIN orders o ON o.user_id = u.id\nWHERE u.country = 'PT' AND u.city = 'Lisbon'\nGROUP BY o.status ORDER BY orders DESC",
+  "plain": [
+   97.85,
+   96.026,
+   96.174,
+   97.22,
+   101.025,
+   97.096,
+   97.301
+  ],
+  "explain_analyze": [
+   101.362,
+   99.66,
+   103.087,
+   102.548,
+   111.193,
+   101.24,
+   99.188
+  ],
+  "analyze_buffers": [
+   101.363,
+   100.03,
+   103.433,
+   106.163,
+   103.974,
+   100.9,
+   100.65
+  ],
+  "timing_off": [
+   97.658,
+   95.659,
+   98.505,
+   103.82,
+   99.187,
+   102.948,
+   98.354
+  ],
+  "plan": "                                                                        QUERY PLAN                                                                         \n-----------------------------------------------------------------------------------------------------------------------------------------------------------\n Sort  (cost=31759.02..31759.03 rows=4 width=21) (actual time=124.725..124.726 rows=4 loops=1)\n   Sort Key: (count(*)) DESC\n   Sort Method: quicksort  Memory: 25kB\n   Buffers: shared hit=129440, temp read=205 written=205\n   ->  GroupAggregate  (cost=31743.94..31758.98 rows=4 width=21) (actual time=118.263..124.718 rows=4 loops=1)\n         Group Key: o.status\n         Buffers: shared hit=129437, temp read=205 written=205\n         ->  Sort  (cost=31743.94..31747.69 rows=1500 width=9) (actual time=117.980..120.727 rows=75000 loops=1)\n               Sort Key: o.status\n               Sort Method: external merge  Disk: 1640kB\n               Buffers: shared hit=129437, temp read=205 written=205\n               ->  Nested Loop  (cost=0.43..31664.81 rows=1500 width=9) (actual time=0.013..110.855 rows=75000 loops=1)\n                     Buffers: shared hit=129434\n                     ->  Seq Scan on users u  (cost=0.00..24434.00 rows=300 width=4) (actual time=0.005..44.254 rows=15000 loops=1)\n                           Filter: ((country = 'PT'::text) AND (city = 'Lisbon'::text))\n                           Rows Removed by Filter: 985000\n                           Buffers: shared hit=9434\n                     ->  Index Scan using orders_user_id_idx on orders o  (cost=0.43..24.05 rows=5 width=13) (actual time=0.002..0.004 rows=5 loops=15000)\n                           Index Cond: (user_id = u.id)\n                           Buffers: shared hit=120000\n Planning:\n   Buffers: shared hit=237\n Planning Time: 0.418 ms\n Execution Time: 125.304 ms\n(24 rows)\n",
+  "median_ms": {
+   "plain": 97.2,
+   "explain_analyze": 101.4,
+   "analyze_buffers": 101.4,
+   "timing_off": 98.5
+  }
+ },
+ "report_city_only": {
+  "settings": "",
+  "sql": "SELECT o.status, count(*) AS orders, sum(o.amount_cents) AS cents\nFROM users u JOIN orders o ON o.user_id = u.id\nWHERE u.city = 'Lisbon'\nGROUP BY o.status ORDER BY orders DESC",
+  "plain": [
+   286.5,
+   286.356,
+   287.81,
+   284.504,
+   284.656,
+   288.915,
+   288.049
+  ],
+  "explain_analyze": [
+   362.521,
+   358.872,
+   361.614,
+   363.751,
+   355.359,
+   362.861,
+   363.055
+  ],
+  "analyze_buffers": [
+   388.314,
+   391.409,
+   388.783,
+   385.601,
+   389.793,
+   390.591,
+   392.04
+  ],
+  "timing_off": [
+   298.427,
+   300.561,
+   296.305,
+   298.377,
+   297.673,
+   299.429,
+   299.577
+  ],
+  "plan": "                                                              QUERY PLAN                                                               \n---------------------------------------------------------------------------------------------------------------------------------------\n Sort  (cost=122909.78..122909.79 rows=4 width=21) (actual time=394.940..394.941 rows=4 loops=1)\n   Sort Key: (count(*)) DESC\n   Sort Method: quicksort  Memory: 25kB\n   Buffers: shared hit=46535\n   ->  HashAggregate  (cost=122909.70..122909.74 rows=4 width=21) (actual time=394.937..394.938 rows=4 loops=1)\n         Group Key: o.status\n         Batches: 1  Memory Usage: 24kB\n         Buffers: shared hit=46535\n         ->  Hash Join  (cost=22121.50..122347.20 rows=75000 width=9) (actual time=40.578..388.458 rows=75000 loops=1)\n               Hash Cond: (o.user_id = u.id)\n               Buffers: shared hit=46535\n               ->  Seq Scan on orders o  (cost=0.00..87100.72 rows=4999972 width=13) (actual time=0.006..120.490 rows=5000000 loops=1)\n                     Buffers: shared hit=37101\n               ->  Hash  (cost=21934.00..21934.00 rows=15000 width=4) (actual time=40.527..40.528 rows=15000 loops=1)\n                     Buckets: 16384  Batches: 1  Memory Usage: 656kB\n                     Buffers: shared hit=9434\n                     ->  Seq Scan on users u  (cost=0.00..21934.00 rows=15000 width=4) (actual time=0.003..39.936 rows=15000 loops=1)\n                           Filter: (city = 'Lisbon'::text)\n                           Rows Removed by Filter: 985000\n                           Buffers: shared hit=9434\n Planning:\n   Buffers: shared hit=16\n Planning Time: 0.076 ms\n Execution Time: 394.957 ms\n(24 rows)\n",
+  "median_ms": {
+   "plain": 286.5,
+   "explain_analyze": 362.5,
+   "analyze_buffers": 389.8,
+   "timing_off": 298.4
+  }
+ },
+ "report_workmem_64mb": {
+  "settings": "SET work_mem = '64MB';",
+  "sql": "SELECT o.status, count(*) AS orders, sum(o.amount_cents) AS cents\nFROM users u JOIN orders o ON o.user_id = u.id\nWHERE u.country = 'PT' AND u.city = 'Lisbon'\nGROUP BY o.status ORDER BY orders DESC",
+  "plain": [
+   95.379,
+   94.783,
+   97.151,
+   95.171,
+   95.954,
+   98.874,
+   109.107
+  ],
+  "explain_analyze": [
+   98.199,
+   96.776,
+   97.673,
+   97.659,
+   99.343,
+   102.224,
+   112.399
+  ],
+  "analyze_buffers": [
+   99.714,
+   98.031,
+   96.306,
+   98.419,
+   101.7,
+   107.429,
+   101.347
+  ],
+  "timing_off": [
+   94.966,
+   97.334,
+   94.837,
+   94.319,
+   95.98,
+   103.889,
+   98.662
+  ],
+  "plan": "                                                                        QUERY PLAN                                                                         \n-----------------------------------------------------------------------------------------------------------------------------------------------------------\n Sort  (cost=31759.02..31759.03 rows=4 width=21) (actual time=101.913..101.914 rows=4 loops=1)\n   Sort Key: (count(*)) DESC\n   Sort Method: quicksort  Memory: 25kB\n   Buffers: shared hit=129434\n   ->  GroupAggregate  (cost=31743.94..31758.98 rows=4 width=21) (actual time=96.707..101.911 rows=4 loops=1)\n         Group Key: o.status\n         Buffers: shared hit=129434\n         ->  Sort  (cost=31743.94..31747.69 rows=1500 width=9) (actual time=96.481..97.909 rows=75000 loops=1)\n               Sort Key: o.status\n               Sort Method: quicksort  Memory: 5416kB\n               Buffers: shared hit=129434\n               ->  Nested Loop  (cost=0.43..31664.81 rows=1500 width=9) (actual time=0.009..91.423 rows=75000 loops=1)\n                     Buffers: shared hit=129434\n                     ->  Seq Scan on users u  (cost=0.00..24434.00 rows=300 width=4) (actual time=0.006..42.618 rows=15000 loops=1)\n                           Filter: ((country = 'PT'::text) AND (city = 'Lisbon'::text))\n                           Rows Removed by Filter: 985000\n                           Buffers: shared hit=9434\n                     ->  Index Scan using orders_user_id_idx on orders o  (cost=0.43..24.05 rows=5 width=13) (actual time=0.001..0.003 rows=5 loops=15000)\n                           Index Cond: (user_id = u.id)\n                           Buffers: shared hit=120000\n Planning:\n   Buffers: shared hit=16\n Planning Time: 0.095 ms\n Execution Time: 101.932 ms\n(24 rows)\n",
+  "median_ms": {
+   "plain": 96.0,
+   "explain_analyze": 98.2,
+   "analyze_buffers": 99.7,
+   "timing_off": 96.0
+  }
+ },
+ "sort_join_4mb": {
+  "settings": "",
+  "sql": "SELECT u.email, o.amount_cents\nFROM orders o JOIN users u ON u.id = o.user_id\nWHERE o.status = 'failed' ORDER BY o.amount_cents DESC",
+  "explain_analyze": [
+   429.485,
+   430.218,
+   423.789,
+   441.839,
+   440.503,
+   473.026,
+   460.844
+  ],
+  "analyze_buffers": [
+   434.894,
+   448.976,
+   430.197,
+   432.919,
+   438.721,
+   457.687,
+   433.644
+  ],
+  "timing_off": [
+   436.044,
+   409.206,
+   414.178,
+   400.675,
+   418.564,
+   428.815,
+   418.169
+  ],
+  "plan": "                                                             QUERY PLAN                                                              \n-------------------------------------------------------------------------------------------------------------------------------------\n Sort  (cost=169734.79..170235.62 rows=200332 width=26) (actual time=449.968..458.116 rows=200120 loops=1)\n   Sort Key: o.amount_cents DESC\n   Sort Method: external merge  Disk: 7448kB\n   Buffers: shared hit=46538, temp read=7079 written=7082\n   ->  Hash Join  (cost=38770.00..147298.52 rows=200332 width=26) (actual time=120.930..422.376 rows=200120 loops=1)\n         Hash Cond: (o.user_id = u.id)\n         Buffers: shared hit=46535, temp read=6148 written=6148\n         ->  Seq Scan on orders o  (cost=0.00..99600.65 rows=200332 width=8) (actual time=0.004..182.547 rows=200120 loops=1)\n               Filter: (status = 'failed'::text)\n               Rows Removed by Filter: 4799880\n               Buffers: shared hit=37101\n         ->  Hash  (cost=19434.00..19434.00 rows=1000000 width=26) (actual time=120.266..120.266 rows=1000000 loops=1)\n               Buckets: 131072  Batches: 16  Memory Usage: 4695kB\n               Buffers: shared hit=9434, temp written=5485\n               ->  Seq Scan on users u  (cost=0.00..19434.00 rows=1000000 width=26) (actual time=0.001..41.937 rows=1000000 loops=1)\n                     Buffers: shared hit=9434\n Planning:\n   Buffers: shared hit=23\n Planning Time: 0.100 ms\n Execution Time: 482.158 ms\n(20 rows)\n",
+  "median_ms": {
+   "explain_analyze": 440.5,
+   "analyze_buffers": 434.9,
+   "timing_off": 418.2
+  }
+ },
+ "sort_join_64mb": {
+  "settings": "SET work_mem = '64MB';",
+  "sql": "SELECT u.email, o.amount_cents\nFROM orders o JOIN users u ON u.id = o.user_id\nWHERE o.status = 'failed' ORDER BY o.amount_cents DESC",
+  "explain_analyze": [
+   401.857,
+   365.101,
+   364.138,
+   356.295,
+   380.273,
+   357.878,
+   370.836
+  ],
+  "analyze_buffers": [
+   378.794,
+   376.788,
+   362.334,
+   364.969,
+   386.015,
+   370.746,
+   374.166
+  ],
+  "timing_off": [
+   338.946,
+   342.923,
+   335.173,
+   352.431,
+   349.88,
+   341.193,
+   340.864
+  ],
+  "plan": "                                                             QUERY PLAN                                                              \n-------------------------------------------------------------------------------------------------------------------------------------\n Sort  (cost=149701.79..150202.62 rows=200332 width=26) (actual time=366.275..373.060 rows=200120 loops=1)\n   Sort Key: o.amount_cents DESC\n   Sort Method: quicksort  Memory: 15523kB\n   Buffers: shared hit=46535\n   ->  Hash Join  (cost=31934.00..132060.52 rows=200332 width=26) (actual time=102.549..345.459 rows=200120 loops=1)\n         Hash Cond: (o.user_id = u.id)\n         Buffers: shared hit=46535\n         ->  Seq Scan on orders o  (cost=0.00..99600.65 rows=200332 width=8) (actual time=0.005..176.445 rows=200120 loops=1)\n               Filter: (status = 'failed'::text)\n               Rows Removed by Filter: 4799880\n               Buffers: shared hit=37101\n         ->  Hash  (cost=19434.00..19434.00 rows=1000000 width=26) (actual time=102.122..102.122 rows=1000000 loops=1)\n               Buckets: 1048576  Batches: 1  Memory Usage: 66782kB\n               Buffers: shared hit=9434\n               ->  Seq Scan on users u  (cost=0.00..19434.00 rows=1000000 width=26) (actual time=0.005..39.986 rows=1000000 loops=1)\n                     Buffers: shared hit=9434\n Planning:\n   Buffers: shared hit=16\n Planning Time: 0.099 ms\n Execution Time: 376.994 ms\n(20 rows)\n",
+  "median_ms": {
+   "explain_analyze": 365.1,
+   "analyze_buffers": 374.2,
+   "timing_off": 341.2
+  }
+ }
+}

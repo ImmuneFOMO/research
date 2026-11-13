@@ -1,0 +1,48 @@
+ pending_before 
+----------------
+         149701
+(1 row)
+
+BEGIN
+                                                      QUERY PLAN                                                      
+----------------------------------------------------------------------------------------------------------------------
+ Delete on orders  (cost=0.00..99600.08 rows=0 width=0) (actual time=620.372..620.374 rows=0 loops=1)
+   Buffers: shared hit=186231 read=37038 dirtied=36469
+   ->  Seq Scan on orders  (cost=0.00..99600.08 rows=153331 width=6) (actual time=0.021..317.998 rows=149701 loops=1)
+         Filter: (status = 'pending'::text)
+         Rows Removed by Filter: 4850299
+         Buffers: shared hit=64 read=37037
+ Planning:
+   Buffers: shared hit=3
+ Planning Time: 0.109 ms
+ Execution Time: 622.448 ms
+(10 rows)
+
+ pending_inside_tx 
+-------------------
+                 0
+(1 row)
+
+ROLLBACK
+ pending_after_rollback 
+------------------------
+                 149701
+(1 row)
+
+CREATE TABLE
+BEGIN
+                                                         QUERY PLAN                                                         
+----------------------------------------------------------------------------------------------------------------------------
+ Insert on audit  (cost=0.00..12.50 rows=0 width=0) (actual time=0.469..0.469 rows=0 loops=1)
+   ->  Function Scan on generate_series  (cost=0.00..12.50 rows=1000 width=40) (actual time=0.054..0.205 rows=1000 loops=1)
+ Planning Time: 0.052 ms
+ Execution Time: 0.501 ms
+(4 rows)
+
+ROLLBACK
+  id  
+------
+ 1001
+(1 row)
+
+INSERT 0 1

@@ -1,0 +1,53 @@
+Timing is on.
+SET
+Time: 0.729 ms
+ setseed 
+---------
+ 
+(1 row)
+
+Time: 2.389 ms
+DROP TABLE
+NOTICE:  table "orders" does not exist, skipping
+NOTICE:  table "users" does not exist, skipping
+Time: 0.931 ms
+CREATE TABLE
+Time: 2.887 ms
+INSERT 0 1000000
+Time: 2055.063 ms (00:02.055)
+CREATE TABLE
+Time: 1.695 ms
+INSERT 0 5000000
+Time: 7128.508 ms (00:07.129)
+CREATE INDEX
+Time: 1165.178 ms (00:01.165)
+ALTER TABLE
+Time: 1.132 ms
+VACUUM
+Time: 3290.365 ms (00:03.290)
+      relname       | relpages | reltuples |  size  
+--------------------+----------+-----------+--------
+ orders             |    37101 |   4999926 | 290 MB
+ orders_pkey        |    13712 |   4999926 | 107 MB
+ orders_user_id_idx |     7120 |   4999926 | 56 MB
+ users              |     9434 |   1000000 | 74 MB
+ users_pkey         |     2745 |   1000000 | 21 MB
+(5 rows)
+
+Time: 0.823 ms
+ country |  city  | count 
+---------+--------+-------
+ PT      | Lisbon | 15000
+ PT      | Porto  |  5000
+(2 rows)
+
+Time: 48.299 ms
+  status  |  count  
+----------+---------
+ paid     | 4399186
+ refunded |  250993
+ failed   |  200120
+ pending  |  149701
+(4 rows)
+
+Time: 434.099 ms

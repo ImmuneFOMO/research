@@ -1,0 +1,172 @@
+{
+ "host": "alphavps-la",
+ "date": "2026-11-13",
+ "mode": "native",
+ "machine": {
+  "os": "Linux",
+  "kernel": "6.8.0-147-generic",
+  "arch": "x86_64",
+  "cpus": 4,
+  "cpu": "Intel(R) Xeon(R) Platinum 8176 CPU @ 2.10GHz",
+  "hypervisor": "KVM",
+  "ram_gb": 7.8,
+  "os_name": "Ubuntu 24.04.5 LTS",
+  "clocksource": "kvm-clock",
+  "clocksources_available": "kvm-clock tsc acpi_pm"
+ },
+ "postgres": {
+  "version": "PostgreSQL 17.12 on x86_64-conda-linux-gnu, compiled by x86_64-conda-linux-gnu-cc (conda-forge gcc 15.3.0-7) 15.3.0, 64-bit",
+  "source": "conda-forge postgresql 17.12 via micromamba"
+ },
+ "settings": [
+  "shared_buffers=1GB",
+  "jit=off",
+  "max_parallel_workers_per_gather=0",
+  "enable_hashjoin=off, enable_mergejoin=off for nestloop only"
+ ],
+ "runs": 7,
+ "pg_test_timing": {
+  "per_loop_ns": 31.22,
+  "raw": "Testing timing overhead for 3 seconds.\nPer loop time including overhead: 31.22 ns\nHistogram of timing durations:\n  < us   % of total      count\n     1     96.96471   93173117\n     2      3.02479    2906514\n     4      0.00096        925\n     8      0.00565       5426\n    16      0.00211       2028\n    32      0.00174       1673\n    64      0.00003         25\n   128      0.00001          9\n   256      0.00000          0\n   512      0.00000          1\n  1024      0.00000          0\n  2048      0.00000          0\n  4096      0.00000          0\n  8192      0.00000          1\n"
+ },
+ "queries": {
+  "count": {
+   "sql": "SELECT count(*) FROM big",
+   "setup": "",
+   "plain": [
+    411.851,
+    418.652,
+    429.276,
+    416.228,
+    430.387,
+    422.743,
+    408.853
+   ],
+   "plain_client": [
+    411.851,
+    418.652,
+    429.276,
+    416.228,
+    430.387,
+    422.743,
+    408.853
+   ],
+   "explain_analyze": [
+    1023.189,
+    1058.46,
+    1116.114,
+    1001.071,
+    1012.474,
+    997.246,
+    1001.946
+   ],
+   "explain_analyze_client": [
+    1023.678,
+    1058.972,
+    1116.67,
+    1001.542,
+    1012.912,
+    997.765,
+    1002.411
+   ],
+   "timing_off": [
+    473.509,
+    518.813,
+    497.807,
+    482.528,
+    503.313,
+    497.989,
+    506.626
+   ],
+   "timing_off_client": [
+    473.963,
+    519.223,
+    498.238,
+    482.964,
+    503.686,
+    498.373,
+    507.086
+   ],
+   "plan": "                                                       QUERY PLAN                                                       \n------------------------------------------------------------------------------------------------------------------------\n Aggregate  (cost=169248.60..169248.61 rows=1 width=8) (actual time=1284.154..1284.156 rows=1 loops=1)\n   Buffers: shared hit=44248\n   ->  Seq Scan on big  (cost=0.00..144248.48 rows=10000048 width=0) (actual time=0.041..682.122 rows=10000000 loops=1)\n         Buffers: shared hit=44248\n Planning:\n   Buffers: shared hit=18 read=1\n Planning Time: 0.272 ms\n Execution Time: 1284.219 ms\n(8 rows)\n",
+   "median_ms": {
+    "plain": 418.65,
+    "explain_analyze": 1012.47,
+    "timing_off": 497.99
+   },
+   "median_client_ms": {
+    "plain": 418.65,
+    "explain_analyze": 1012.91,
+    "timing_off": 498.37
+   }
+  },
+  "nestloop": {
+   "sql": "SELECT sum(i.v) FROM outer_t o JOIN inner_t i ON i.id = o.inner_id",
+   "setup": "SET enable_hashjoin = off; SET enable_mergejoin = off;",
+   "plain": [
+    2344.339,
+    2388.342,
+    2302.84,
+    2424.688,
+    2696.578,
+    2308.203,
+    2215.663
+   ],
+   "plain_client": [
+    2344.339,
+    2388.342,
+    2302.84,
+    2424.688,
+    2696.578,
+    2308.203,
+    2215.663
+   ],
+   "explain_analyze": [
+    2688.154,
+    2648.495,
+    2768.58,
+    2775.887,
+    2779.492,
+    2642.433,
+    2544.625
+   ],
+   "explain_analyze_client": [
+    2688.637,
+    2649.033,
+    2769.151,
+    2776.49,
+    2780.078,
+    2642.981,
+    2545.075
+   ],
+   "timing_off": [
+    2380.619,
+    2299.082,
+    2523.838,
+    2600.304,
+    2332.554,
+    2320.278,
+    2295.347
+   ],
+   "timing_off_client": [
+    2381.073,
+    2300.051,
+    2524.359,
+    2600.903,
+    2333.1,
+    2320.832,
+    2295.808
+   ],
+   "plan": "                                                                QUERY PLAN                                                                \n------------------------------------------------------------------------------------------------------------------------------------------\n Aggregate  (cost=488104.95..488104.96 rows=1 width=8) (actual time=2764.545..2764.547 rows=1 loops=1)\n   Buffers: shared hit=4004425\n   ->  Nested Loop  (cost=0.42..485604.95 rows=1000000 width=4) (actual time=0.109..2695.703 rows=1000000 loops=1)\n         Buffers: shared hit=4004425\n         ->  Seq Scan on outer_t o  (cost=0.00..14425.00 rows=1000000 width=4) (actual time=0.026..75.994 rows=1000000 loops=1)\n               Buffers: shared hit=4425\n         ->  Index Scan using inner_t_pkey on inner_t i  (cost=0.42..0.47 rows=1 width=8) (actual time=0.002..0.002 rows=1 loops=1000000)\n               Index Cond: (id = o.inner_id)\n               Buffers: shared hit=4000000\n Planning:\n   Buffers: shared hit=125 read=2\n Planning Time: 0.605 ms\n Execution Time: 2764.585 ms\n(13 rows)\n",
+   "median_ms": {
+    "plain": 2344.34,
+    "explain_analyze": 2688.15,
+    "timing_off": 2332.55
+   },
+   "median_client_ms": {
+    "plain": 2344.34,
+    "explain_analyze": 2688.64,
+    "timing_off": 2333.1
+   }
+  }
+ }
+}

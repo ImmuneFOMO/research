@@ -1,0 +1,930 @@
+@@cold report plain 0
+SET
+Timing is on.
+  status  | orders |   cents   
+----------+--------+-----------
+ paid     |  65973 | 659868749
+ refunded |   3778 |  37580122
+ failed   |   3071 |  30598061
+ pending  |   2178 |  21811439
+(4 rows)
+
+Time: 309.958 ms
+
+@@cold report explain_analyze 0
+SET
+Timing is on.
+                                                                        QUERY PLAN                                                                         
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=31759.19..31759.20 rows=4 width=21) (actual time=418.776..418.782 rows=4 loops=1)
+   Sort Key: (count(*)) DESC
+   Sort Method: quicksort  Memory: 25kB
+   Buffers: shared hit=87639 read=41801, temp read=205 written=205
+   I/O Timings: shared read=262.123, temp read=0.172 write=1.390
+   ->  GroupAggregate  (cost=31744.11..31759.15 rows=4 width=21) (actual time=410.879..418.758 rows=4 loops=1)
+         Group Key: o.status
+         Buffers: shared hit=87636 read=41801, temp read=205 written=205
+         I/O Timings: shared read=262.123, temp read=0.172 write=1.390
+         ->  Sort  (cost=31744.11..31747.86 rows=1500 width=9) (actual time=410.496..414.550 rows=75000 loops=1)
+               Sort Key: o.status
+               Sort Method: external merge  Disk: 1640kB
+               Buffers: shared hit=87636 read=41801, temp read=205 written=205
+               I/O Timings: shared read=262.123, temp read=0.172 write=1.390
+               ->  Nested Loop  (cost=0.43..31664.98 rows=1500 width=9) (actual time=0.032..396.289 rows=75000 loops=1)
+                     Buffers: shared hit=87633 read=41801
+                     I/O Timings: shared read=262.123
+                     ->  Seq Scan on users u  (cost=0.00..24434.00 rows=300 width=4) (actual time=0.018..105.432 rows=15000 loops=1)
+                           Filter: ((country = 'PT'::text) AND (city = 'Lisbon'::text))
+                           Rows Removed by Filter: 985000
+                           Buffers: shared read=9434
+                           I/O Timings: shared read=65.078
+                     ->  Index Scan using orders_user_id_idx on orders o  (cost=0.43..24.05 rows=5 width=13) (actual time=0.008..0.019 rows=5 loops=15000)
+                           Index Cond: (user_id = u.id)
+                           Buffers: shared hit=87633 read=32367
+                           I/O Timings: shared read=197.045
+ Planning:
+   Buffers: shared hit=201 read=36
+   I/O Timings: shared read=0.189
+ Planning Time: 0.728 ms
+ Execution Time: 419.167 ms
+(31 rows)
+
+Time: 421.273 ms
+
+@@cold report timing_off 0
+SET
+Timing is on.
+                                                               QUERY PLAN                                                                
+-----------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=31759.19..31759.20 rows=4 width=21) (actual rows=4 loops=1)
+   Sort Key: (count(*)) DESC
+   Sort Method: quicksort  Memory: 25kB
+   Buffers: shared hit=87639 read=41801, temp read=205 written=205
+   I/O Timings: shared read=194.856, temp read=0.139 write=1.707
+   ->  GroupAggregate  (cost=31744.11..31759.15 rows=4 width=21) (actual rows=4 loops=1)
+         Group Key: o.status
+         Buffers: shared hit=87636 read=41801, temp read=205 written=205
+         I/O Timings: shared read=194.856, temp read=0.139 write=1.707
+         ->  Sort  (cost=31744.11..31747.86 rows=1500 width=9) (actual rows=75000 loops=1)
+               Sort Key: o.status
+               Sort Method: external merge  Disk: 1640kB
+               Buffers: shared hit=87636 read=41801, temp read=205 written=205
+               I/O Timings: shared read=194.856, temp read=0.139 write=1.707
+               ->  Nested Loop  (cost=0.43..31664.98 rows=1500 width=9) (actual rows=75000 loops=1)
+                     Buffers: shared hit=87633 read=41801
+                     I/O Timings: shared read=194.856
+                     ->  Seq Scan on users u  (cost=0.00..24434.00 rows=300 width=4) (actual rows=15000 loops=1)
+                           Filter: ((country = 'PT'::text) AND (city = 'Lisbon'::text))
+                           Rows Removed by Filter: 985000
+                           Buffers: shared read=9434
+                           I/O Timings: shared read=44.445
+                     ->  Index Scan using orders_user_id_idx on orders o  (cost=0.43..24.05 rows=5 width=13) (actual rows=5 loops=15000)
+                           Index Cond: (user_id = u.id)
+                           Buffers: shared hit=87633 read=32367
+                           I/O Timings: shared read=150.411
+ Planning:
+   Buffers: shared hit=201 read=36
+   I/O Timings: shared read=0.166
+ Planning Time: 0.658 ms
+ Execution Time: 331.379 ms
+(31 rows)
+
+Time: 333.104 ms
+
+@@cold report plain 1
+SET
+Timing is on.
+  status  | orders |   cents   
+----------+--------+-----------
+ paid     |  65973 | 659868749
+ refunded |   3778 |  37580122
+ failed   |   3071 |  30598061
+ pending  |   2178 |  21811439
+(4 rows)
+
+Time: 304.251 ms
+
+@@cold report explain_analyze 1
+SET
+Timing is on.
+                                                                        QUERY PLAN                                                                         
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=31759.19..31759.20 rows=4 width=21) (actual time=307.183..307.188 rows=4 loops=1)
+   Sort Key: (count(*)) DESC
+   Sort Method: quicksort  Memory: 25kB
+   Buffers: shared hit=87639 read=41801, temp read=205 written=205
+   I/O Timings: shared read=163.633, temp read=0.147 write=0.407
+   ->  GroupAggregate  (cost=31744.11..31759.15 rows=4 width=21) (actual time=299.306..307.168 rows=4 loops=1)
+         Group Key: o.status
+         Buffers: shared hit=87636 read=41801, temp read=205 written=205
+         I/O Timings: shared read=163.633, temp read=0.147 write=0.407
+         ->  Sort  (cost=31744.11..31747.86 rows=1500 width=9) (actual time=298.959..302.796 rows=75000 loops=1)
+               Sort Key: o.status
+               Sort Method: external merge  Disk: 1640kB
+               Buffers: shared hit=87636 read=41801, temp read=205 written=205
+               I/O Timings: shared read=163.633, temp read=0.147 write=0.407
+               ->  Nested Loop  (cost=0.43..31664.98 rows=1500 width=9) (actual time=0.025..288.328 rows=75000 loops=1)
+                     Buffers: shared hit=87633 read=41801
+                     I/O Timings: shared read=163.633
+                     ->  Seq Scan on users u  (cost=0.00..24434.00 rows=300 width=4) (actual time=0.014..66.658 rows=15000 loops=1)
+                           Filter: ((country = 'PT'::text) AND (city = 'Lisbon'::text))
+                           Rows Removed by Filter: 985000
+                           Buffers: shared read=9434
+                           I/O Timings: shared read=28.725
+                     ->  Index Scan using orders_user_id_idx on orders o  (cost=0.43..24.05 rows=5 width=13) (actual time=0.005..0.014 rows=5 loops=15000)
+                           Index Cond: (user_id = u.id)
+                           Buffers: shared hit=87633 read=32367
+                           I/O Timings: shared read=134.909
+ Planning:
+   Buffers: shared hit=201 read=36
+   I/O Timings: shared read=0.179
+ Planning Time: 0.672 ms
+ Execution Time: 307.621 ms
+(31 rows)
+
+Time: 309.502 ms
+
+@@cold report timing_off 1
+SET
+Timing is on.
+                                                               QUERY PLAN                                                                
+-----------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=31759.19..31759.20 rows=4 width=21) (actual rows=4 loops=1)
+   Sort Key: (count(*)) DESC
+   Sort Method: quicksort  Memory: 25kB
+   Buffers: shared hit=87639 read=41801, temp read=205 written=205
+   I/O Timings: shared read=167.622, temp read=0.150 write=0.452
+   ->  GroupAggregate  (cost=31744.11..31759.15 rows=4 width=21) (actual rows=4 loops=1)
+         Group Key: o.status
+         Buffers: shared hit=87636 read=41801, temp read=205 written=205
+         I/O Timings: shared read=167.622, temp read=0.150 write=0.452
+         ->  Sort  (cost=31744.11..31747.86 rows=1500 width=9) (actual rows=75000 loops=1)
+               Sort Key: o.status
+               Sort Method: external merge  Disk: 1640kB
+               Buffers: shared hit=87636 read=41801, temp read=205 written=205
+               I/O Timings: shared read=167.622, temp read=0.150 write=0.452
+               ->  Nested Loop  (cost=0.43..31664.98 rows=1500 width=9) (actual rows=75000 loops=1)
+                     Buffers: shared hit=87633 read=41801
+                     I/O Timings: shared read=167.622
+                     ->  Seq Scan on users u  (cost=0.00..24434.00 rows=300 width=4) (actual rows=15000 loops=1)
+                           Filter: ((country = 'PT'::text) AND (city = 'Lisbon'::text))
+                           Rows Removed by Filter: 985000
+                           Buffers: shared read=9434
+                           I/O Timings: shared read=31.499
+                     ->  Index Scan using orders_user_id_idx on orders o  (cost=0.43..24.05 rows=5 width=13) (actual rows=5 loops=15000)
+                           Index Cond: (user_id = u.id)
+                           Buffers: shared hit=87633 read=32367
+                           I/O Timings: shared read=136.123
+ Planning:
+   Buffers: shared hit=201 read=36
+   I/O Timings: shared read=0.187
+ Planning Time: 0.689 ms
+ Execution Time: 304.922 ms
+(31 rows)
+
+Time: 306.739 ms
+
+@@cold report plain 2
+SET
+Timing is on.
+  status  | orders |   cents   
+----------+--------+-----------
+ paid     |  65973 | 659868749
+ refunded |   3778 |  37580122
+ failed   |   3071 |  30598061
+ pending  |   2178 |  21811439
+(4 rows)
+
+Time: 297.971 ms
+
+@@cold report explain_analyze 2
+SET
+Timing is on.
+                                                                        QUERY PLAN                                                                         
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=31759.19..31759.20 rows=4 width=21) (actual time=300.302..300.306 rows=4 loops=1)
+   Sort Key: (count(*)) DESC
+   Sort Method: quicksort  Memory: 25kB
+   Buffers: shared hit=87639 read=41801, temp read=205 written=205
+   I/O Timings: shared read=160.772, temp read=0.131 write=0.429
+   ->  GroupAggregate  (cost=31744.11..31759.15 rows=4 width=21) (actual time=292.459..300.285 rows=4 loops=1)
+         Group Key: o.status
+         Buffers: shared hit=87636 read=41801, temp read=205 written=205
+         I/O Timings: shared read=160.772, temp read=0.131 write=0.429
+         ->  Sort  (cost=31744.11..31747.86 rows=1500 width=9) (actual time=292.095..295.877 rows=75000 loops=1)
+               Sort Key: o.status
+               Sort Method: external merge  Disk: 1640kB
+               Buffers: shared hit=87636 read=41801, temp read=205 written=205
+               I/O Timings: shared read=160.772, temp read=0.131 write=0.429
+               ->  Nested Loop  (cost=0.43..31664.98 rows=1500 width=9) (actual time=0.036..281.548 rows=75000 loops=1)
+                     Buffers: shared hit=87633 read=41801
+                     I/O Timings: shared read=160.772
+                     ->  Seq Scan on users u  (cost=0.00..24434.00 rows=300 width=4) (actual time=0.016..66.135 rows=15000 loops=1)
+                           Filter: ((country = 'PT'::text) AND (city = 'Lisbon'::text))
+                           Rows Removed by Filter: 985000
+                           Buffers: shared read=9434
+                           I/O Timings: shared read=28.663
+                     ->  Index Scan using orders_user_id_idx on orders o  (cost=0.43..24.05 rows=5 width=13) (actual time=0.005..0.014 rows=5 loops=15000)
+                           Index Cond: (user_id = u.id)
+                           Buffers: shared hit=87633 read=32367
+                           I/O Timings: shared read=132.109
+ Planning:
+   Buffers: shared hit=201 read=36
+   I/O Timings: shared read=0.315
+ Planning Time: 0.914 ms
+ Execution Time: 300.686 ms
+(31 rows)
+
+Time: 303.223 ms
+
+@@cold report timing_off 2
+SET
+Timing is on.
+                                                               QUERY PLAN                                                                
+-----------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=31759.19..31759.20 rows=4 width=21) (actual rows=4 loops=1)
+   Sort Key: (count(*)) DESC
+   Sort Method: quicksort  Memory: 25kB
+   Buffers: shared hit=87639 read=41801, temp read=205 written=205
+   I/O Timings: shared read=161.401, temp read=0.146 write=0.413
+   ->  GroupAggregate  (cost=31744.11..31759.15 rows=4 width=21) (actual rows=4 loops=1)
+         Group Key: o.status
+         Buffers: shared hit=87636 read=41801, temp read=205 written=205
+         I/O Timings: shared read=161.401, temp read=0.146 write=0.413
+         ->  Sort  (cost=31744.11..31747.86 rows=1500 width=9) (actual rows=75000 loops=1)
+               Sort Key: o.status
+               Sort Method: external merge  Disk: 1640kB
+               Buffers: shared hit=87636 read=41801, temp read=205 written=205
+               I/O Timings: shared read=161.401, temp read=0.146 write=0.413
+               ->  Nested Loop  (cost=0.43..31664.98 rows=1500 width=9) (actual rows=75000 loops=1)
+                     Buffers: shared hit=87633 read=41801
+                     I/O Timings: shared read=161.401
+                     ->  Seq Scan on users u  (cost=0.00..24434.00 rows=300 width=4) (actual rows=15000 loops=1)
+                           Filter: ((country = 'PT'::text) AND (city = 'Lisbon'::text))
+                           Rows Removed by Filter: 985000
+                           Buffers: shared read=9434
+                           I/O Timings: shared read=29.824
+                     ->  Index Scan using orders_user_id_idx on orders o  (cost=0.43..24.05 rows=5 width=13) (actual rows=5 loops=15000)
+                           Index Cond: (user_id = u.id)
+                           Buffers: shared hit=87633 read=32367
+                           I/O Timings: shared read=131.578
+ Planning:
+   Buffers: shared hit=201 read=36
+   I/O Timings: shared read=0.175
+ Planning Time: 0.605 ms
+ Execution Time: 294.385 ms
+(31 rows)
+
+Time: 296.094 ms
+
+@@cold report plain 3
+SET
+Timing is on.
+  status  | orders |   cents   
+----------+--------+-----------
+ paid     |  65973 | 659868749
+ refunded |   3778 |  37580122
+ failed   |   3071 |  30598061
+ pending  |   2178 |  21811439
+(4 rows)
+
+Time: 293.861 ms
+
+@@cold report explain_analyze 3
+SET
+Timing is on.
+                                                                        QUERY PLAN                                                                         
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=31759.19..31759.20 rows=4 width=21) (actual time=304.277..304.280 rows=4 loops=1)
+   Sort Key: (count(*)) DESC
+   Sort Method: quicksort  Memory: 25kB
+   Buffers: shared hit=87639 read=41801, temp read=205 written=205
+   I/O Timings: shared read=164.269, temp read=0.141 write=0.432
+   ->  GroupAggregate  (cost=31744.11..31759.15 rows=4 width=21) (actual time=296.729..304.257 rows=4 loops=1)
+         Group Key: o.status
+         Buffers: shared hit=87636 read=41801, temp read=205 written=205
+         I/O Timings: shared read=164.269, temp read=0.141 write=0.432
+         ->  Sort  (cost=31744.11..31747.86 rows=1500 width=9) (actual time=296.397..300.044 rows=75000 loops=1)
+               Sort Key: o.status
+               Sort Method: external merge  Disk: 1640kB
+               Buffers: shared hit=87636 read=41801, temp read=205 written=205
+               I/O Timings: shared read=164.269, temp read=0.141 write=0.432
+               ->  Nested Loop  (cost=0.43..31664.98 rows=1500 width=9) (actual time=0.028..285.836 rows=75000 loops=1)
+                     Buffers: shared hit=87633 read=41801
+                     I/O Timings: shared read=164.269
+                     ->  Seq Scan on users u  (cost=0.00..24434.00 rows=300 width=4) (actual time=0.016..67.378 rows=15000 loops=1)
+                           Filter: ((country = 'PT'::text) AND (city = 'Lisbon'::text))
+                           Rows Removed by Filter: 985000
+                           Buffers: shared read=9434
+                           I/O Timings: shared read=29.445
+                     ->  Index Scan using orders_user_id_idx on orders o  (cost=0.43..24.05 rows=5 width=13) (actual time=0.005..0.014 rows=5 loops=15000)
+                           Index Cond: (user_id = u.id)
+                           Buffers: shared hit=87633 read=32367
+                           I/O Timings: shared read=134.824
+ Planning:
+   Buffers: shared hit=201 read=36
+   I/O Timings: shared read=0.215
+ Planning Time: 0.688 ms
+ Execution Time: 304.616 ms
+(31 rows)
+
+Time: 306.519 ms
+
+@@cold report timing_off 3
+SET
+Timing is on.
+                                                               QUERY PLAN                                                                
+-----------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=31759.19..31759.20 rows=4 width=21) (actual rows=4 loops=1)
+   Sort Key: (count(*)) DESC
+   Sort Method: quicksort  Memory: 25kB
+   Buffers: shared hit=87639 read=41801, temp read=205 written=205
+   I/O Timings: shared read=163.119, temp read=0.144 write=0.412
+   ->  GroupAggregate  (cost=31744.11..31759.15 rows=4 width=21) (actual rows=4 loops=1)
+         Group Key: o.status
+         Buffers: shared hit=87636 read=41801, temp read=205 written=205
+         I/O Timings: shared read=163.119, temp read=0.144 write=0.412
+         ->  Sort  (cost=31744.11..31747.86 rows=1500 width=9) (actual rows=75000 loops=1)
+               Sort Key: o.status
+               Sort Method: external merge  Disk: 1640kB
+               Buffers: shared hit=87636 read=41801, temp read=205 written=205
+               I/O Timings: shared read=163.119, temp read=0.144 write=0.412
+               ->  Nested Loop  (cost=0.43..31664.98 rows=1500 width=9) (actual rows=75000 loops=1)
+                     Buffers: shared hit=87633 read=41801
+                     I/O Timings: shared read=163.119
+                     ->  Seq Scan on users u  (cost=0.00..24434.00 rows=300 width=4) (actual rows=15000 loops=1)
+                           Filter: ((country = 'PT'::text) AND (city = 'Lisbon'::text))
+                           Rows Removed by Filter: 985000
+                           Buffers: shared read=9434
+                           I/O Timings: shared read=28.248
+                     ->  Index Scan using orders_user_id_idx on orders o  (cost=0.43..24.05 rows=5 width=13) (actual rows=5 loops=15000)
+                           Index Cond: (user_id = u.id)
+                           Buffers: shared hit=87633 read=32367
+                           I/O Timings: shared read=134.871
+ Planning:
+   Buffers: shared hit=201 read=36
+   I/O Timings: shared read=0.173
+ Planning Time: 0.631 ms
+ Execution Time: 296.128 ms
+(31 rows)
+
+Time: 297.860 ms
+
+@@cold report plain 4
+SET
+Timing is on.
+  status  | orders |   cents   
+----------+--------+-----------
+ paid     |  65973 | 659868749
+ refunded |   3778 |  37580122
+ failed   |   3071 |  30598061
+ pending  |   2178 |  21811439
+(4 rows)
+
+Time: 311.570 ms
+
+@@cold report explain_analyze 4
+SET
+Timing is on.
+                                                                        QUERY PLAN                                                                         
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=31759.19..31759.20 rows=4 width=21) (actual time=318.448..318.451 rows=4 loops=1)
+   Sort Key: (count(*)) DESC
+   Sort Method: quicksort  Memory: 25kB
+   Buffers: shared hit=87639 read=41801, temp read=205 written=205
+   I/O Timings: shared read=170.871, temp read=0.164 write=0.430
+   ->  GroupAggregate  (cost=31744.11..31759.15 rows=4 width=21) (actual time=311.005..318.431 rows=4 loops=1)
+         Group Key: o.status
+         Buffers: shared hit=87636 read=41801, temp read=205 written=205
+         I/O Timings: shared read=170.871, temp read=0.164 write=0.430
+         ->  Sort  (cost=31744.11..31747.86 rows=1500 width=9) (actual time=310.661..314.308 rows=75000 loops=1)
+               Sort Key: o.status
+               Sort Method: external merge  Disk: 1640kB
+               Buffers: shared hit=87636 read=41801, temp read=205 written=205
+               I/O Timings: shared read=170.871, temp read=0.164 write=0.430
+               ->  Nested Loop  (cost=0.43..31664.98 rows=1500 width=9) (actual time=0.024..299.737 rows=75000 loops=1)
+                     Buffers: shared hit=87633 read=41801
+                     I/O Timings: shared read=170.871
+                     ->  Seq Scan on users u  (cost=0.00..24434.00 rows=300 width=4) (actual time=0.014..69.689 rows=15000 loops=1)
+                           Filter: ((country = 'PT'::text) AND (city = 'Lisbon'::text))
+                           Rows Removed by Filter: 985000
+                           Buffers: shared read=9434
+                           I/O Timings: shared read=30.472
+                     ->  Index Scan using orders_user_id_idx on orders o  (cost=0.43..24.05 rows=5 width=13) (actual time=0.005..0.015 rows=5 loops=15000)
+                           Index Cond: (user_id = u.id)
+                           Buffers: shared hit=87633 read=32367
+                           I/O Timings: shared read=140.399
+ Planning:
+   Buffers: shared hit=201 read=36
+   I/O Timings: shared read=0.150
+ Planning Time: 0.588 ms
+ Execution Time: 318.794 ms
+(31 rows)
+
+Time: 320.419 ms
+
+@@cold report timing_off 4
+SET
+Timing is on.
+                                                               QUERY PLAN                                                                
+-----------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=31759.19..31759.20 rows=4 width=21) (actual rows=4 loops=1)
+   Sort Key: (count(*)) DESC
+   Sort Method: quicksort  Memory: 25kB
+   Buffers: shared hit=87639 read=41801, temp read=205 written=205
+   I/O Timings: shared read=170.919, temp read=0.151 write=0.463
+   ->  GroupAggregate  (cost=31744.11..31759.15 rows=4 width=21) (actual rows=4 loops=1)
+         Group Key: o.status
+         Buffers: shared hit=87636 read=41801, temp read=205 written=205
+         I/O Timings: shared read=170.919, temp read=0.151 write=0.463
+         ->  Sort  (cost=31744.11..31747.86 rows=1500 width=9) (actual rows=75000 loops=1)
+               Sort Key: o.status
+               Sort Method: external merge  Disk: 1640kB
+               Buffers: shared hit=87636 read=41801, temp read=205 written=205
+               I/O Timings: shared read=170.919, temp read=0.151 write=0.463
+               ->  Nested Loop  (cost=0.43..31664.98 rows=1500 width=9) (actual rows=75000 loops=1)
+                     Buffers: shared hit=87633 read=41801
+                     I/O Timings: shared read=170.919
+                     ->  Seq Scan on users u  (cost=0.00..24434.00 rows=300 width=4) (actual rows=15000 loops=1)
+                           Filter: ((country = 'PT'::text) AND (city = 'Lisbon'::text))
+                           Rows Removed by Filter: 985000
+                           Buffers: shared read=9434
+                           I/O Timings: shared read=31.095
+                     ->  Index Scan using orders_user_id_idx on orders o  (cost=0.43..24.05 rows=5 width=13) (actual rows=5 loops=15000)
+                           Index Cond: (user_id = u.id)
+                           Buffers: shared hit=87633 read=32367
+                           I/O Timings: shared read=139.824
+ Planning:
+   Buffers: shared hit=201 read=36
+   I/O Timings: shared read=0.186
+ Planning Time: 0.657 ms
+ Execution Time: 306.874 ms
+(31 rows)
+
+Time: 308.716 ms
+
+@@cold report_city_only plain 0
+SET
+Timing is on.
+  status  | orders |   cents   
+----------+--------+-----------
+ paid     |  65973 | 659868749
+ refunded |   3778 |  37580122
+ failed   |   3071 |  30598061
+ pending  |   2178 |  21811439
+(4 rows)
+
+Time: 338.976 ms
+
+@@cold report_city_only explain_analyze 0
+SET
+Timing is on.
+                                                              QUERY PLAN                                                               
+---------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=122909.19..122909.20 rows=4 width=21) (actual time=584.109..584.114 rows=4 loops=1)
+   Sort Key: (count(*)) DESC
+   Sort Method: quicksort  Memory: 25kB
+   Buffers: shared hit=3 read=46535
+   I/O Timings: shared read=47.043
+   ->  HashAggregate  (cost=122909.11..122909.15 rows=4 width=21) (actual time=584.082..584.086 rows=4 loops=1)
+         Group Key: o.status
+         Batches: 1  Memory Usage: 24kB
+         Buffers: shared read=46535
+         I/O Timings: shared read=47.043
+         ->  Hash Join  (cost=22121.50..122346.62 rows=74999 width=9) (actual time=74.785..576.473 rows=75000 loops=1)
+               Hash Cond: (o.user_id = u.id)
+               Buffers: shared read=46535
+               I/O Timings: shared read=47.043
+               ->  Seq Scan on orders o  (cost=0.00..87100.26 rows=4999926 width=13) (actual time=0.016..202.458 rows=5000000 loops=1)
+                     Buffers: shared read=37101
+                     I/O Timings: shared read=13.243
+               ->  Hash  (cost=21934.00..21934.00 rows=15000 width=4) (actual time=74.577..74.579 rows=15000 loops=1)
+                     Buckets: 16384  Batches: 1  Memory Usage: 656kB
+                     Buffers: shared read=9434
+                     I/O Timings: shared read=33.800
+                     ->  Seq Scan on users u  (cost=0.00..21934.00 rows=15000 width=4) (actual time=0.015..71.823 rows=15000 loops=1)
+                           Filter: (city = 'Lisbon'::text)
+                           Rows Removed by Filter: 985000
+                           Buffers: shared read=9434
+                           I/O Timings: shared read=33.800
+ Planning:
+   Buffers: shared hit=198 read=36
+   I/O Timings: shared read=0.185
+ Planning Time: 0.680 ms
+ Execution Time: 584.222 ms
+(31 rows)
+
+Time: 586.144 ms
+
+@@cold report_city_only timing_off 0
+SET
+Timing is on.
+                                                    QUERY PLAN                                                     
+-------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=122909.19..122909.20 rows=4 width=21) (actual rows=4 loops=1)
+   Sort Key: (count(*)) DESC
+   Sort Method: quicksort  Memory: 25kB
+   Buffers: shared hit=3 read=46535
+   I/O Timings: shared read=48.177
+   ->  HashAggregate  (cost=122909.11..122909.15 rows=4 width=21) (actual rows=4 loops=1)
+         Group Key: o.status
+         Batches: 1  Memory Usage: 24kB
+         Buffers: shared read=46535
+         I/O Timings: shared read=48.177
+         ->  Hash Join  (cost=22121.50..122346.62 rows=74999 width=9) (actual rows=75000 loops=1)
+               Hash Cond: (o.user_id = u.id)
+               Buffers: shared read=46535
+               I/O Timings: shared read=48.177
+               ->  Seq Scan on orders o  (cost=0.00..87100.26 rows=4999926 width=13) (actual rows=5000000 loops=1)
+                     Buffers: shared read=37101
+                     I/O Timings: shared read=14.256
+               ->  Hash  (cost=21934.00..21934.00 rows=15000 width=4) (actual rows=15000 loops=1)
+                     Buckets: 16384  Batches: 1  Memory Usage: 656kB
+                     Buffers: shared read=9434
+                     I/O Timings: shared read=33.921
+                     ->  Seq Scan on users u  (cost=0.00..21934.00 rows=15000 width=4) (actual rows=15000 loops=1)
+                           Filter: (city = 'Lisbon'::text)
+                           Rows Removed by Filter: 985000
+                           Buffers: shared read=9434
+                           I/O Timings: shared read=33.921
+ Planning:
+   Buffers: shared hit=198 read=36
+   I/O Timings: shared read=0.196
+ Planning Time: 0.725 ms
+ Execution Time: 419.704 ms
+(31 rows)
+
+Time: 421.803 ms
+
+@@cold report_city_only plain 1
+SET
+Timing is on.
+  status  | orders |   cents   
+----------+--------+-----------
+ paid     |  65973 | 659868749
+ refunded |   3778 |  37580122
+ failed   |   3071 |  30598061
+ pending  |   2178 |  21811439
+(4 rows)
+
+Time: 366.369 ms
+
+@@cold report_city_only explain_analyze 1
+SET
+Timing is on.
+                                                              QUERY PLAN                                                               
+---------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=122909.19..122909.20 rows=4 width=21) (actual time=604.633..604.638 rows=4 loops=1)
+   Sort Key: (count(*)) DESC
+   Sort Method: quicksort  Memory: 25kB
+   Buffers: shared hit=3 read=46535
+   I/O Timings: shared read=44.602
+   ->  HashAggregate  (cost=122909.11..122909.15 rows=4 width=21) (actual time=604.613..604.617 rows=4 loops=1)
+         Group Key: o.status
+         Batches: 1  Memory Usage: 24kB
+         Buffers: shared read=46535
+         I/O Timings: shared read=44.602
+         ->  Hash Join  (cost=22121.50..122346.62 rows=74999 width=9) (actual time=71.019..597.077 rows=75000 loops=1)
+               Hash Cond: (o.user_id = u.id)
+               Buffers: shared read=46535
+               I/O Timings: shared read=44.602
+               ->  Seq Scan on orders o  (cost=0.00..87100.26 rows=4999926 width=13) (actual time=0.016..204.167 rows=5000000 loops=1)
+                     Buffers: shared read=37101
+                     I/O Timings: shared read=13.466
+               ->  Hash  (cost=21934.00..21934.00 rows=15000 width=4) (actual time=70.820..70.822 rows=15000 loops=1)
+                     Buckets: 16384  Batches: 1  Memory Usage: 656kB
+                     Buffers: shared read=9434
+                     I/O Timings: shared read=31.136
+                     ->  Seq Scan on users u  (cost=0.00..21934.00 rows=15000 width=4) (actual time=0.017..68.420 rows=15000 loops=1)
+                           Filter: (city = 'Lisbon'::text)
+                           Rows Removed by Filter: 985000
+                           Buffers: shared read=9434
+                           I/O Timings: shared read=31.136
+ Planning:
+   Buffers: shared hit=198 read=36
+   I/O Timings: shared read=0.219
+ Planning Time: 0.800 ms
+ Execution Time: 604.815 ms
+(31 rows)
+
+Time: 607.403 ms
+
+@@cold report_city_only timing_off 1
+SET
+Timing is on.
+                                                    QUERY PLAN                                                     
+-------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=122909.19..122909.20 rows=4 width=21) (actual rows=4 loops=1)
+   Sort Key: (count(*)) DESC
+   Sort Method: quicksort  Memory: 25kB
+   Buffers: shared hit=3 read=46535
+   I/O Timings: shared read=45.441
+   ->  HashAggregate  (cost=122909.11..122909.15 rows=4 width=21) (actual rows=4 loops=1)
+         Group Key: o.status
+         Batches: 1  Memory Usage: 24kB
+         Buffers: shared read=46535
+         I/O Timings: shared read=45.441
+         ->  Hash Join  (cost=22121.50..122346.62 rows=74999 width=9) (actual rows=75000 loops=1)
+               Hash Cond: (o.user_id = u.id)
+               Buffers: shared read=46535
+               I/O Timings: shared read=45.441
+               ->  Seq Scan on orders o  (cost=0.00..87100.26 rows=4999926 width=13) (actual rows=5000000 loops=1)
+                     Buffers: shared read=37101
+                     I/O Timings: shared read=13.431
+               ->  Hash  (cost=21934.00..21934.00 rows=15000 width=4) (actual rows=15000 loops=1)
+                     Buckets: 16384  Batches: 1  Memory Usage: 656kB
+                     Buffers: shared read=9434
+                     I/O Timings: shared read=32.009
+                     ->  Seq Scan on users u  (cost=0.00..21934.00 rows=15000 width=4) (actual rows=15000 loops=1)
+                           Filter: (city = 'Lisbon'::text)
+                           Rows Removed by Filter: 985000
+                           Buffers: shared read=9434
+                           I/O Timings: shared read=32.009
+ Planning:
+   Buffers: shared hit=198 read=36
+   I/O Timings: shared read=0.234
+ Planning Time: 0.720 ms
+ Execution Time: 397.945 ms
+(31 rows)
+
+Time: 400.174 ms
+
+@@cold report_city_only plain 2
+SET
+Timing is on.
+  status  | orders |   cents   
+----------+--------+-----------
+ paid     |  65973 | 659868749
+ refunded |   3778 |  37580122
+ failed   |   3071 |  30598061
+ pending  |   2178 |  21811439
+(4 rows)
+
+Time: 351.678 ms
+
+@@cold report_city_only explain_analyze 2
+SET
+Timing is on.
+                                                              QUERY PLAN                                                               
+---------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=122909.19..122909.20 rows=4 width=21) (actual time=584.430..584.434 rows=4 loops=1)
+   Sort Key: (count(*)) DESC
+   Sort Method: quicksort  Memory: 25kB
+   Buffers: shared hit=3 read=46535
+   I/O Timings: shared read=47.833
+   ->  HashAggregate  (cost=122909.11..122909.15 rows=4 width=21) (actual time=584.410..584.413 rows=4 loops=1)
+         Group Key: o.status
+         Batches: 1  Memory Usage: 24kB
+         Buffers: shared read=46535
+         I/O Timings: shared read=47.833
+         ->  Hash Join  (cost=22121.50..122346.62 rows=74999 width=9) (actual time=75.097..577.204 rows=75000 loops=1)
+               Hash Cond: (o.user_id = u.id)
+               Buffers: shared read=46535
+               I/O Timings: shared read=47.833
+               ->  Seq Scan on orders o  (cost=0.00..87100.26 rows=4999926 width=13) (actual time=0.014..200.549 rows=5000000 loops=1)
+                     Buffers: shared read=37101
+                     I/O Timings: shared read=12.878
+               ->  Hash  (cost=21934.00..21934.00 rows=15000 width=4) (actual time=74.872..74.874 rows=15000 loops=1)
+                     Buckets: 16384  Batches: 1  Memory Usage: 656kB
+                     Buffers: shared read=9434
+                     I/O Timings: shared read=34.955
+                     ->  Seq Scan on users u  (cost=0.00..21934.00 rows=15000 width=4) (actual time=0.015..72.152 rows=15000 loops=1)
+                           Filter: (city = 'Lisbon'::text)
+                           Rows Removed by Filter: 985000
+                           Buffers: shared read=9434
+                           I/O Timings: shared read=34.955
+ Planning:
+   Buffers: shared hit=198 read=36
+   I/O Timings: shared read=0.192
+ Planning Time: 0.725 ms
+ Execution Time: 584.549 ms
+(31 rows)
+
+Time: 586.447 ms
+
+@@cold report_city_only timing_off 2
+SET
+Timing is on.
+                                                    QUERY PLAN                                                     
+-------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=122909.19..122909.20 rows=4 width=21) (actual rows=4 loops=1)
+   Sort Key: (count(*)) DESC
+   Sort Method: quicksort  Memory: 25kB
+   Buffers: shared hit=3 read=46535
+   I/O Timings: shared read=50.045
+   ->  HashAggregate  (cost=122909.11..122909.15 rows=4 width=21) (actual rows=4 loops=1)
+         Group Key: o.status
+         Batches: 1  Memory Usage: 24kB
+         Buffers: shared read=46535
+         I/O Timings: shared read=50.045
+         ->  Hash Join  (cost=22121.50..122346.62 rows=74999 width=9) (actual rows=75000 loops=1)
+               Hash Cond: (o.user_id = u.id)
+               Buffers: shared read=46535
+               I/O Timings: shared read=50.045
+               ->  Seq Scan on orders o  (cost=0.00..87100.26 rows=4999926 width=13) (actual rows=5000000 loops=1)
+                     Buffers: shared read=37101
+                     I/O Timings: shared read=13.665
+               ->  Hash  (cost=21934.00..21934.00 rows=15000 width=4) (actual rows=15000 loops=1)
+                     Buckets: 16384  Batches: 1  Memory Usage: 656kB
+                     Buffers: shared read=9434
+                     I/O Timings: shared read=36.380
+                     ->  Seq Scan on users u  (cost=0.00..21934.00 rows=15000 width=4) (actual rows=15000 loops=1)
+                           Filter: (city = 'Lisbon'::text)
+                           Rows Removed by Filter: 985000
+                           Buffers: shared read=9434
+                           I/O Timings: shared read=36.380
+ Planning:
+   Buffers: shared hit=198 read=36
+   I/O Timings: shared read=0.167
+ Planning Time: 0.641 ms
+ Execution Time: 419.979 ms
+(31 rows)
+
+Time: 421.807 ms
+
+@@cold report_city_only plain 3
+SET
+Timing is on.
+  status  | orders |   cents   
+----------+--------+-----------
+ paid     |  65973 | 659868749
+ refunded |   3778 |  37580122
+ failed   |   3071 |  30598061
+ pending  |   2178 |  21811439
+(4 rows)
+
+Time: 341.880 ms
+
+@@cold report_city_only explain_analyze 3
+SET
+Timing is on.
+                                                              QUERY PLAN                                                               
+---------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=122909.19..122909.20 rows=4 width=21) (actual time=576.371..576.376 rows=4 loops=1)
+   Sort Key: (count(*)) DESC
+   Sort Method: quicksort  Memory: 25kB
+   Buffers: shared hit=3 read=46535
+   I/O Timings: shared read=45.127
+   ->  HashAggregate  (cost=122909.11..122909.15 rows=4 width=21) (actual time=576.324..576.328 rows=4 loops=1)
+         Group Key: o.status
+         Batches: 1  Memory Usage: 24kB
+         Buffers: shared read=46535
+         I/O Timings: shared read=45.127
+         ->  Hash Join  (cost=22121.50..122346.62 rows=74999 width=9) (actual time=71.995..568.677 rows=75000 loops=1)
+               Hash Cond: (o.user_id = u.id)
+               Buffers: shared read=46535
+               I/O Timings: shared read=45.127
+               ->  Seq Scan on orders o  (cost=0.00..87100.26 rows=4999926 width=13) (actual time=0.016..199.932 rows=5000000 loops=1)
+                     Buffers: shared read=37101
+                     I/O Timings: shared read=12.861
+               ->  Hash  (cost=21934.00..21934.00 rows=15000 width=4) (actual time=71.817..71.819 rows=15000 loops=1)
+                     Buckets: 16384  Batches: 1  Memory Usage: 656kB
+                     Buffers: shared read=9434
+                     I/O Timings: shared read=32.266
+                     ->  Seq Scan on users u  (cost=0.00..21934.00 rows=15000 width=4) (actual time=0.015..70.111 rows=15000 loops=1)
+                           Filter: (city = 'Lisbon'::text)
+                           Rows Removed by Filter: 985000
+                           Buffers: shared read=9434
+                           I/O Timings: shared read=32.266
+ Planning:
+   Buffers: shared hit=198 read=36
+   I/O Timings: shared read=0.189
+ Planning Time: 0.694 ms
+ Execution Time: 576.504 ms
+(31 rows)
+
+Time: 578.449 ms
+
+@@cold report_city_only timing_off 3
+SET
+Timing is on.
+                                                    QUERY PLAN                                                     
+-------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=122909.19..122909.20 rows=4 width=21) (actual rows=4 loops=1)
+   Sort Key: (count(*)) DESC
+   Sort Method: quicksort  Memory: 25kB
+   Buffers: shared hit=3 read=46535
+   I/O Timings: shared read=47.811
+   ->  HashAggregate  (cost=122909.11..122909.15 rows=4 width=21) (actual rows=4 loops=1)
+         Group Key: o.status
+         Batches: 1  Memory Usage: 24kB
+         Buffers: shared read=46535
+         I/O Timings: shared read=47.811
+         ->  Hash Join  (cost=22121.50..122346.62 rows=74999 width=9) (actual rows=75000 loops=1)
+               Hash Cond: (o.user_id = u.id)
+               Buffers: shared read=46535
+               I/O Timings: shared read=47.811
+               ->  Seq Scan on orders o  (cost=0.00..87100.26 rows=4999926 width=13) (actual rows=5000000 loops=1)
+                     Buffers: shared read=37101
+                     I/O Timings: shared read=14.095
+               ->  Hash  (cost=21934.00..21934.00 rows=15000 width=4) (actual rows=15000 loops=1)
+                     Buckets: 16384  Batches: 1  Memory Usage: 656kB
+                     Buffers: shared read=9434
+                     I/O Timings: shared read=33.715
+                     ->  Seq Scan on users u  (cost=0.00..21934.00 rows=15000 width=4) (actual rows=15000 loops=1)
+                           Filter: (city = 'Lisbon'::text)
+                           Rows Removed by Filter: 985000
+                           Buffers: shared read=9434
+                           I/O Timings: shared read=33.715
+ Planning:
+   Buffers: shared hit=198 read=36
+   I/O Timings: shared read=0.225
+ Planning Time: 0.742 ms
+ Execution Time: 395.348 ms
+(31 rows)
+
+Time: 397.326 ms
+
+@@cold report_city_only plain 4
+SET
+Timing is on.
+  status  | orders |   cents   
+----------+--------+-----------
+ paid     |  65973 | 659868749
+ refunded |   3778 |  37580122
+ failed   |   3071 |  30598061
+ pending  |   2178 |  21811439
+(4 rows)
+
+Time: 338.650 ms
+
+@@cold report_city_only explain_analyze 4
+SET
+Timing is on.
+                                                              QUERY PLAN                                                               
+---------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=122909.19..122909.20 rows=4 width=21) (actual time=568.942..568.946 rows=4 loops=1)
+   Sort Key: (count(*)) DESC
+   Sort Method: quicksort  Memory: 25kB
+   Buffers: shared hit=3 read=46535
+   I/O Timings: shared read=43.834
+   ->  HashAggregate  (cost=122909.11..122909.15 rows=4 width=21) (actual time=568.924..568.928 rows=4 loops=1)
+         Group Key: o.status
+         Batches: 1  Memory Usage: 24kB
+         Buffers: shared read=46535
+         I/O Timings: shared read=43.834
+         ->  Hash Join  (cost=22121.50..122346.62 rows=74999 width=9) (actual time=69.951..561.597 rows=75000 loops=1)
+               Hash Cond: (o.user_id = u.id)
+               Buffers: shared read=46535
+               I/O Timings: shared read=43.834
+               ->  Seq Scan on orders o  (cost=0.00..87100.26 rows=4999926 width=13) (actual time=0.014..198.823 rows=5000000 loops=1)
+                     Buffers: shared read=37101
+                     I/O Timings: shared read=13.266
+               ->  Hash  (cost=21934.00..21934.00 rows=15000 width=4) (actual time=69.777..69.778 rows=15000 loops=1)
+                     Buckets: 16384  Batches: 1  Memory Usage: 656kB
+                     Buffers: shared read=9434
+                     I/O Timings: shared read=30.568
+                     ->  Seq Scan on users u  (cost=0.00..21934.00 rows=15000 width=4) (actual time=0.013..67.604 rows=15000 loops=1)
+                           Filter: (city = 'Lisbon'::text)
+                           Rows Removed by Filter: 985000
+                           Buffers: shared read=9434
+                           I/O Timings: shared read=30.568
+ Planning:
+   Buffers: shared hit=198 read=36
+   I/O Timings: shared read=0.183
+ Planning Time: 0.637 ms
+ Execution Time: 569.072 ms
+(31 rows)
+
+Time: 570.902 ms
+
+@@cold report_city_only timing_off 4
+SET
+Timing is on.
+                                                    QUERY PLAN                                                     
+-------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=122909.19..122909.20 rows=4 width=21) (actual rows=4 loops=1)
+   Sort Key: (count(*)) DESC
+   Sort Method: quicksort  Memory: 25kB
+   Buffers: shared hit=3 read=46535
+   I/O Timings: shared read=43.150
+   ->  HashAggregate  (cost=122909.11..122909.15 rows=4 width=21) (actual rows=4 loops=1)
+         Group Key: o.status
+         Batches: 1  Memory Usage: 24kB
+         Buffers: shared read=46535
+         I/O Timings: shared read=43.150
+         ->  Hash Join  (cost=22121.50..122346.62 rows=74999 width=9) (actual rows=75000 loops=1)
+               Hash Cond: (o.user_id = u.id)
+               Buffers: shared read=46535
+               I/O Timings: shared read=43.150
+               ->  Seq Scan on orders o  (cost=0.00..87100.26 rows=4999926 width=13) (actual rows=5000000 loops=1)
+                     Buffers: shared read=37101
+                     I/O Timings: shared read=13.598
+               ->  Hash  (cost=21934.00..21934.00 rows=15000 width=4) (actual rows=15000 loops=1)
+                     Buckets: 16384  Batches: 1  Memory Usage: 656kB
+                     Buffers: shared read=9434
+                     I/O Timings: shared read=29.552
+                     ->  Seq Scan on users u  (cost=0.00..21934.00 rows=15000 width=4) (actual rows=15000 loops=1)
+                           Filter: (city = 'Lisbon'::text)
+                           Rows Removed by Filter: 985000
+                           Buffers: shared read=9434
+                           I/O Timings: shared read=29.552
+ Planning:
+   Buffers: shared hit=198 read=36
+   I/O Timings: shared read=0.183
+ Planning Time: 0.710 ms
+ Execution Time: 389.531 ms
+(31 rows)
+
+Time: 391.613 ms
+

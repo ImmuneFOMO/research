@@ -1,0 +1,240 @@
+CREATE EXTENSION
+ pg_prewarm | pg_prewarm | pg_prewarm | pg_prewarm 
+------------+------------+------------+------------
+       9434 |       2745 |      37101 |       7120
+(1 row)
+
+### 1. EXPLAIN only: the forecast
+                                                 QUERY PLAN                                                  
+-------------------------------------------------------------------------------------------------------------
+ Sort  (cost=31759.19..31759.20 rows=4 width=21)
+   Sort Key: (count(*)) DESC
+   ->  GroupAggregate  (cost=31744.11..31759.15 rows=4 width=21)
+         Group Key: o.status
+         ->  Sort  (cost=31744.11..31747.86 rows=1500 width=9)
+               Sort Key: o.status
+               ->  Nested Loop  (cost=0.43..31664.98 rows=1500 width=9)
+                     ->  Seq Scan on users u  (cost=0.00..24434.00 rows=300 width=4)
+                           Filter: ((country = 'PT'::text) AND (city = 'Lisbon'::text))
+                     ->  Index Scan using orders_user_id_idx on orders o  (cost=0.43..24.05 rows=5 width=13)
+                           Index Cond: (user_id = u.id)
+(11 rows)
+
+### 2. EXPLAIN (ANALYZE, BUFFERS): forecast and what happened
+                                                                        QUERY PLAN                                                                         
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=31759.19..31759.20 rows=4 width=21) (actual time=209.555..209.560 rows=4 loops=1)
+   Sort Key: (count(*)) DESC
+   Sort Method: quicksort  Memory: 25kB
+   Buffers: shared hit=129440, temp read=205 written=205
+   ->  GroupAggregate  (cost=31744.11..31759.15 rows=4 width=21) (actual time=201.392..209.511 rows=4 loops=1)
+         Group Key: o.status
+         Buffers: shared hit=129437, temp read=205 written=205
+         ->  Sort  (cost=31744.11..31747.86 rows=1500 width=9) (actual time=201.037..205.049 rows=75000 loops=1)
+               Sort Key: o.status
+               Sort Method: external merge  Disk: 1640kB
+               Buffers: shared hit=129437, temp read=205 written=205
+               ->  Nested Loop  (cost=0.43..31664.98 rows=1500 width=9) (actual time=0.030..189.952 rows=75000 loops=1)
+                     Buffers: shared hit=129434
+                     ->  Seq Scan on users u  (cost=0.00..24434.00 rows=300 width=4) (actual time=0.013..47.068 rows=15000 loops=1)
+                           Filter: ((country = 'PT'::text) AND (city = 'Lisbon'::text))
+                           Rows Removed by Filter: 985000
+                           Buffers: shared hit=9434
+                     ->  Index Scan using orders_user_id_idx on orders o  (cost=0.43..24.05 rows=5 width=13) (actual time=0.003..0.009 rows=5 loops=15000)
+                           Index Cond: (user_id = u.id)
+                           Buffers: shared hit=120000
+ Planning:
+   Buffers: shared hit=16
+ Planning Time: 0.247 ms
+ Execution Time: 209.990 ms
+(24 rows)
+
+### 3. where the 300 comes from
+ attname |                                                                most_common_vals                                                                |                                 most_common_freqs                                  
+---------+------------------------------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------
+ city    | {"New York",London,Bengaluru,Berlin,Paris,"San Francisco","Sao Paulo",Madrid,Austin,Barcelona,Amsterdam,Munich,Warsaw,Manchester,Lisbon,Porto} | {0.12,0.11,0.1,0.09,0.09,0.08,0.08,0.06,0.05,0.05,0.04,0.04,0.04,0.03,0.015,0.005}
+ country | {US,GB,DE,ES,IN,FR,BR,NL,PL,PT}                                                                                                                | {0.25,0.14,0.13,0.11,0.1,0.09,0.08,0.04,0.04,0.02}
+(2 rows)
+
+ estimate  
+-----------
+ 300.00000
+(1 row)
+
+### 4. the same rows without the redundant country filter
+                                                              QUERY PLAN                                                               
+---------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=122909.19..122909.20 rows=4 width=21) (actual time=577.682..577.687 rows=4 loops=1)
+   Sort Key: (count(*)) DESC
+   Sort Method: quicksort  Memory: 25kB
+   Buffers: shared hit=46535
+   ->  HashAggregate  (cost=122909.11..122909.15 rows=4 width=21) (actual time=577.672..577.677 rows=4 loops=1)
+         Group Key: o.status
+         Batches: 1  Memory Usage: 24kB
+         Buffers: shared hit=46535
+         ->  Hash Join  (cost=22121.50..122346.62 rows=74999 width=9) (actual time=45.641..570.107 rows=75000 loops=1)
+               Hash Cond: (o.user_id = u.id)
+               Buffers: shared hit=46535
+               ->  Seq Scan on orders o  (cost=0.00..87100.26 rows=4999926 width=13) (actual time=0.015..206.967 rows=5000000 loops=1)
+                     Buffers: shared hit=37101
+               ->  Hash  (cost=21934.00..21934.00 rows=15000 width=4) (actual time=45.498..45.499 rows=15000 loops=1)
+                     Buckets: 16384  Batches: 1  Memory Usage: 656kB
+                     Buffers: shared hit=9434
+                     ->  Seq Scan on users u  (cost=0.00..21934.00 rows=15000 width=4) (actual time=0.007..43.067 rows=15000 loops=1)
+                           Filter: (city = 'Lisbon'::text)
+                           Rows Removed by Filter: 985000
+                           Buffers: shared hit=9434
+ Planning:
+   Buffers: shared hit=16
+ Planning Time: 0.161 ms
+ Execution Time: 577.729 ms
+(24 rows)
+
+### 5. per-loop numbers: only failed orders
+                                                               QUERY PLAN                                                                
+-----------------------------------------------------------------------------------------------------------------------------------------
+ Nested Loop  (cost=0.43..31656.73 rows=62 width=20) (actual time=0.240..147.007 rows=3071 loops=1)
+   Buffers: shared hit=129434
+   ->  Seq Scan on users u  (cost=0.00..24434.00 rows=300 width=4) (actual time=0.008..41.759 rows=15000 loops=1)
+         Filter: ((country = 'PT'::text) AND (city = 'Lisbon'::text))
+         Rows Removed by Filter: 985000
+         Buffers: shared hit=9434
+   ->  Index Scan using orders_user_id_idx on orders o  (cost=0.43..24.07 rows=1 width=24) (actual time=0.006..0.007 rows=0 loops=15000)
+         Index Cond: (user_id = u.id)
+         Filter: (status = 'failed'::text)
+         Rows Removed by Filter: 5
+         Buffers: shared hit=120000
+ Planning:
+   Buffers: shared hit=22
+ Planning Time: 0.217 ms
+ Execution Time: 147.126 ms
+(15 rows)
+
+### 6. the report again with work_mem = 64MB
+SET
+                                                                        QUERY PLAN                                                                         
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=31759.19..31759.20 rows=4 width=21) (actual time=184.199..184.202 rows=4 loops=1)
+   Sort Key: (count(*)) DESC
+   Sort Method: quicksort  Memory: 25kB
+   Buffers: shared hit=129434
+   ->  GroupAggregate  (cost=31744.11..31759.15 rows=4 width=21) (actual time=177.428..184.191 rows=4 loops=1)
+         Group Key: o.status
+         Buffers: shared hit=129434
+         ->  Sort  (cost=31744.11..31747.86 rows=1500 width=9) (actual time=176.989..179.602 rows=75000 loops=1)
+               Sort Key: o.status
+               Sort Method: quicksort  Memory: 5416kB
+               Buffers: shared hit=129434
+               ->  Nested Loop  (cost=0.43..31664.98 rows=1500 width=9) (actual time=0.022..167.854 rows=75000 loops=1)
+                     Buffers: shared hit=129434
+                     ->  Seq Scan on users u  (cost=0.00..24434.00 rows=300 width=4) (actual time=0.012..44.840 rows=15000 loops=1)
+                           Filter: ((country = 'PT'::text) AND (city = 'Lisbon'::text))
+                           Rows Removed by Filter: 985000
+                           Buffers: shared hit=9434
+                     ->  Index Scan using orders_user_id_idx on orders o  (cost=0.43..24.05 rows=5 width=13) (actual time=0.003..0.008 rows=5 loops=15000)
+                           Index Cond: (user_id = u.id)
+                           Buffers: shared hit=120000
+ Planning:
+   Buffers: shared hit=16
+ Planning Time: 0.239 ms
+ Execution Time: 184.752 ms
+(24 rows)
+
+RESET
+### 7. Hash and Sort spilling at the default work_mem (4MB), then at 64MB
+                                                             QUERY PLAN                                                              
+-------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=170402.84..170916.58 rows=205497 width=26) (actual time=528.017..540.623 rows=200120 loops=1)
+   Sort Key: o.amount_cents DESC
+   Sort Method: external merge  Disk: 7448kB
+   Buffers: shared hit=46538, temp read=7079 written=7082
+   ->  Hash Join  (cost=38770.00..147351.50 rows=205497 width=26) (actual time=187.274..482.858 rows=200120 loops=1)
+         Hash Cond: (o.user_id = u.id)
+         Buffers: shared hit=46535, temp read=6148 written=6148
+         ->  Seq Scan on orders o  (cost=0.00..99600.08 rows=205497 width=8) (actual time=0.010..192.602 rows=200120 loops=1)
+               Filter: (status = 'failed'::text)
+               Rows Removed by Filter: 4799880
+               Buffers: shared hit=37101
+         ->  Hash  (cost=19434.00..19434.00 rows=1000000 width=26) (actual time=186.969..186.971 rows=1000000 loops=1)
+               Buckets: 131072  Batches: 16  Memory Usage: 4695kB
+               Buffers: shared hit=9434, temp written=5485
+               ->  Seq Scan on users u  (cost=0.00..19434.00 rows=1000000 width=26) (actual time=0.004..68.135 rows=1000000 loops=1)
+                     Buffers: shared hit=9434
+ Planning:
+   Buffers: shared hit=23
+ Planning Time: 0.210 ms
+ Execution Time: 548.145 ms
+(20 rows)
+
+SET
+                                                             QUERY PLAN                                                              
+-------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=150207.34..150721.08 rows=205497 width=26) (actual time=663.247..694.835 rows=200120 loops=1)
+   Sort Key: o.amount_cents DESC
+   Sort Method: quicksort  Memory: 15523kB
+   Buffers: shared hit=46535
+   ->  Hash Join  (cost=31934.00..132073.50 rows=205497 width=26) (actual time=281.968..613.942 rows=200120 loops=1)
+         Hash Cond: (o.user_id = u.id)
+         Buffers: shared hit=46535
+         ->  Seq Scan on orders o  (cost=0.00..99600.08 rows=205497 width=8) (actual time=0.011..180.822 rows=200120 loops=1)
+               Filter: (status = 'failed'::text)
+               Rows Removed by Filter: 4799880
+               Buffers: shared hit=37101
+         ->  Hash  (cost=19434.00..19434.00 rows=1000000 width=26) (actual time=279.862..279.865 rows=1000000 loops=1)
+               Buckets: 1048576  Batches: 1  Memory Usage: 66782kB
+               Buffers: shared hit=9434
+               ->  Seq Scan on users u  (cost=0.00..19434.00 rows=1000000 width=26) (actual time=0.010..60.522 rows=1000000 loops=1)
+                     Buffers: shared hit=9434
+ Planning:
+   Buffers: shared hit=16
+ Planning Time: 0.217 ms
+ Execution Time: 703.180 ms
+(20 rows)
+
+RESET
+### 8. parallel workers on: loops counts the leader and each worker
+SET
+                                                                           QUERY PLAN                                                                            
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Sort  (cost=79358.73..79358.74 rows=4 width=21) (actual time=228.336..239.326 rows=4 loops=1)
+   Sort Key: (count(*)) DESC
+   Sort Method: quicksort  Memory: 25kB
+   Buffers: shared hit=46579
+   ->  Finalize GroupAggregate  (cost=79357.65..79358.69 rows=4 width=21) (actual time=228.327..239.320 rows=4 loops=1)
+         Group Key: o.status
+         Buffers: shared hit=46579
+         ->  Gather Merge  (cost=79357.65..79358.59 rows=8 width=21) (actual time=228.319..239.306 rows=12 loops=1)
+               Workers Planned: 2
+               Workers Launched: 2
+               Buffers: shared hit=46579
+               ->  Sort  (cost=78357.63..78357.64 rows=4 width=21) (actual time=224.419..224.424 rows=4 loops=3)
+                     Sort Key: o.status
+                     Sort Method: quicksort  Memory: 25kB
+                     Buffers: shared hit=46579
+                     Worker 0:  Sort Method: quicksort  Memory: 25kB
+                     Worker 1:  Sort Method: quicksort  Memory: 25kB
+                     ->  Partial HashAggregate  (cost=78357.55..78357.59 rows=4 width=21) (actual time=224.384..224.389 rows=4 loops=3)
+                           Group Key: o.status
+                           Batches: 1  Memory Usage: 24kB
+                           Buffers: shared hit=46563
+                           Worker 0:  Batches: 1  Memory Usage: 24kB
+                           Worker 1:  Batches: 1  Memory Usage: 24kB
+                           ->  Parallel Hash Join  (cost=14720.46..78123.17 rows=31250 width=9) (actual time=18.961..221.270 rows=25000 loops=3)
+                                 Hash Cond: (o.user_id = u.id)
+                                 Buffers: shared hit=46563
+                                 ->  Parallel Seq Scan on orders o  (cost=0.00..57934.03 rows=2083302 width=13) (actual time=0.012..78.375 rows=1666667 loops=3)
+                                       Buffers: shared hit=37101
+                                 ->  Parallel Hash  (cost=14642.33..14642.33 rows=6250 width=4) (actual time=18.776..18.777 rows=5000 loops=3)
+                                       Buckets: 16384  Batches: 1  Memory Usage: 768kB
+                                       Buffers: shared hit=9434
+                                       ->  Parallel Seq Scan on users u  (cost=0.00..14642.33 rows=6250 width=4) (actual time=0.017..17.654 rows=5000 loops=3)
+                                             Filter: (city = 'Lisbon'::text)
+                                             Rows Removed by Filter: 328333
+                                             Buffers: shared hit=9434
+ Planning:
+   Buffers: shared hit=19
+ Planning Time: 0.272 ms
+ Execution Time: 239.393 ms
+(39 rows)
+
+RESET

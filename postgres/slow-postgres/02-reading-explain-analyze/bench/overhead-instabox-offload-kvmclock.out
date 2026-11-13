@@ -1,0 +1,623 @@
+# overhead.py on instabox-offload-kvmclock, 2026-11-13 14:40:59 +0000, mode=docker
+                                                       version                                                        
+----------------------------------------------------------------------------------------------------------------------
+ PostgreSQL 17.12 (Debian 17.12-1.pgdg13+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 14.2.0-19) 14.2.0, 64-bit
+(1 row)
+
+DROP TABLE
+CREATE TABLE
+INSERT 0 10000000
+CREATE TABLE
+INSERT 0 1000000
+CREATE TABLE
+INSERT 0 1000000
+VACUUM
+   relname    | relpages | reltuples 
+--------------+----------+-----------
+ big          |    44248 |  10000048
+ inner_t      |     4425 |   1000000
+ inner_t_pkey |     2745 |   1000000
+ outer_t      |     4425 |   1000000
+(4 rows)
+
+
+# pg_test_timing -d 3
+Testing timing overhead for 3 seconds.
+Per loop time including overhead: 27.54 ns
+Histogram of timing durations:
+  < us   % of total      count
+     1     97.26818  105947023
+     2      2.72829    2971728
+     4      0.00018        201
+     8      0.00302       3289
+    16      0.00023        247
+    32      0.00004         41
+    64      0.00003         35
+   128      0.00001         15
+   256      0.00001          8
+   512      0.00000          3
+  1024      0.00000          2
+
+# bench
+Timing is on.
+RESET
+Time: 0.140 ms
+@@plan count
+                                                       QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=169248.60..169248.61 rows=1 width=8) (actual time=788.960..788.962 rows=1 loops=1)
+   Buffers: shared hit=44248
+   ->  Seq Scan on big  (cost=0.00..144248.48 rows=10000048 width=0) (actual time=0.012..438.540 rows=10000000 loops=1)
+         Buffers: shared hit=44248
+ Planning:
+   Buffers: shared hit=18 read=1
+ Planning Time: 0.164 ms
+ Execution Time: 789.025 ms
+(8 rows)
+
+Time: 789.919 ms
+@@run count plain -2
+  count   
+----------
+ 10000000
+(1 row)
+
+Time: 236.859 ms
+@@run count explain_analyze -2
+                                                       QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=169248.60..169248.61 rows=1 width=8) (actual time=748.498..748.500 rows=1 loops=1)
+   ->  Seq Scan on big  (cost=0.00..144248.48 rows=10000048 width=0) (actual time=0.009..415.638 rows=10000000 loops=1)
+ Planning Time: 0.052 ms
+ Execution Time: 748.526 ms
+(4 rows)
+
+Time: 749.550 ms
+@@run count timing_off -2
+                                             QUERY PLAN                                             
+----------------------------------------------------------------------------------------------------
+ Aggregate  (cost=169248.60..169248.61 rows=1 width=8) (actual rows=1 loops=1)
+   ->  Seq Scan on big  (cost=0.00..144248.48 rows=10000048 width=0) (actual rows=10000000 loops=1)
+ Planning Time: 0.048 ms
+ Execution Time: 270.118 ms
+(4 rows)
+
+Time: 270.536 ms
+@@run count plain -1
+  count   
+----------
+ 10000000
+(1 row)
+
+Time: 227.618 ms
+@@run count explain_analyze -1
+                                                       QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=169248.60..169248.61 rows=1 width=8) (actual time=736.795..736.798 rows=1 loops=1)
+   ->  Seq Scan on big  (cost=0.00..144248.48 rows=10000048 width=0) (actual time=0.007..408.243 rows=10000000 loops=1)
+ Planning Time: 0.049 ms
+ Execution Time: 736.826 ms
+(4 rows)
+
+Time: 737.246 ms
+@@run count timing_off -1
+                                             QUERY PLAN                                             
+----------------------------------------------------------------------------------------------------
+ Aggregate  (cost=169248.60..169248.61 rows=1 width=8) (actual rows=1 loops=1)
+   ->  Seq Scan on big  (cost=0.00..144248.48 rows=10000048 width=0) (actual rows=10000000 loops=1)
+ Planning Time: 0.060 ms
+ Execution Time: 261.033 ms
+(4 rows)
+
+Time: 261.456 ms
+@@run count plain 0
+  count   
+----------
+ 10000000
+(1 row)
+
+Time: 229.160 ms
+@@run count explain_analyze 0
+                                                       QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=169248.60..169248.61 rows=1 width=8) (actual time=731.470..731.472 rows=1 loops=1)
+   ->  Seq Scan on big  (cost=0.00..144248.48 rows=10000048 width=0) (actual time=0.015..406.326 rows=10000000 loops=1)
+ Planning Time: 0.055 ms
+ Execution Time: 731.503 ms
+(4 rows)
+
+Time: 732.009 ms
+@@run count timing_off 0
+                                             QUERY PLAN                                             
+----------------------------------------------------------------------------------------------------
+ Aggregate  (cost=169248.60..169248.61 rows=1 width=8) (actual rows=1 loops=1)
+   ->  Seq Scan on big  (cost=0.00..144248.48 rows=10000048 width=0) (actual rows=10000000 loops=1)
+ Planning Time: 0.048 ms
+ Execution Time: 254.389 ms
+(4 rows)
+
+Time: 254.779 ms
+@@run count plain 1
+  count   
+----------
+ 10000000
+(1 row)
+
+Time: 228.196 ms
+@@run count explain_analyze 1
+                                                       QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=169248.60..169248.61 rows=1 width=8) (actual time=732.332..732.333 rows=1 loops=1)
+   ->  Seq Scan on big  (cost=0.00..144248.48 rows=10000048 width=0) (actual time=0.007..406.376 rows=10000000 loops=1)
+ Planning Time: 0.047 ms
+ Execution Time: 732.353 ms
+(4 rows)
+
+Time: 732.724 ms
+@@run count timing_off 1
+                                             QUERY PLAN                                             
+----------------------------------------------------------------------------------------------------
+ Aggregate  (cost=169248.60..169248.61 rows=1 width=8) (actual rows=1 loops=1)
+   ->  Seq Scan on big  (cost=0.00..144248.48 rows=10000048 width=0) (actual rows=10000000 loops=1)
+ Planning Time: 0.035 ms
+ Execution Time: 258.908 ms
+(4 rows)
+
+Time: 259.232 ms
+@@run count plain 2
+  count   
+----------
+ 10000000
+(1 row)
+
+Time: 223.477 ms
+@@run count explain_analyze 2
+                                                       QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=169248.60..169248.61 rows=1 width=8) (actual time=728.770..728.771 rows=1 loops=1)
+   ->  Seq Scan on big  (cost=0.00..144248.48 rows=10000048 width=0) (actual time=0.006..404.361 rows=10000000 loops=1)
+ Planning Time: 0.048 ms
+ Execution Time: 728.793 ms
+(4 rows)
+
+Time: 729.153 ms
+@@run count timing_off 2
+                                             QUERY PLAN                                             
+----------------------------------------------------------------------------------------------------
+ Aggregate  (cost=169248.60..169248.61 rows=1 width=8) (actual rows=1 loops=1)
+   ->  Seq Scan on big  (cost=0.00..144248.48 rows=10000048 width=0) (actual rows=10000000 loops=1)
+ Planning Time: 0.052 ms
+ Execution Time: 256.555 ms
+(4 rows)
+
+Time: 257.005 ms
+@@run count plain 3
+  count   
+----------
+ 10000000
+(1 row)
+
+Time: 227.063 ms
+@@run count explain_analyze 3
+                                                       QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=169248.60..169248.61 rows=1 width=8) (actual time=729.265..729.267 rows=1 loops=1)
+   ->  Seq Scan on big  (cost=0.00..144248.48 rows=10000048 width=0) (actual time=0.005..405.150 rows=10000000 loops=1)
+ Planning Time: 0.028 ms
+ Execution Time: 729.287 ms
+(4 rows)
+
+Time: 729.625 ms
+@@run count timing_off 3
+                                             QUERY PLAN                                             
+----------------------------------------------------------------------------------------------------
+ Aggregate  (cost=169248.60..169248.61 rows=1 width=8) (actual rows=1 loops=1)
+   ->  Seq Scan on big  (cost=0.00..144248.48 rows=10000048 width=0) (actual rows=10000000 loops=1)
+ Planning Time: 0.046 ms
+ Execution Time: 255.502 ms
+(4 rows)
+
+Time: 256.713 ms
+@@run count plain 4
+  count   
+----------
+ 10000000
+(1 row)
+
+Time: 225.070 ms
+@@run count explain_analyze 4
+                                                       QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=169248.60..169248.61 rows=1 width=8) (actual time=737.052..737.054 rows=1 loops=1)
+   ->  Seq Scan on big  (cost=0.00..144248.48 rows=10000048 width=0) (actual time=0.006..408.791 rows=10000000 loops=1)
+ Planning Time: 0.027 ms
+ Execution Time: 737.074 ms
+(4 rows)
+
+Time: 737.420 ms
+@@run count timing_off 4
+                                             QUERY PLAN                                             
+----------------------------------------------------------------------------------------------------
+ Aggregate  (cost=169248.60..169248.61 rows=1 width=8) (actual rows=1 loops=1)
+   ->  Seq Scan on big  (cost=0.00..144248.48 rows=10000048 width=0) (actual rows=10000000 loops=1)
+ Planning Time: 0.055 ms
+ Execution Time: 259.607 ms
+(4 rows)
+
+Time: 260.097 ms
+@@run count plain 5
+  count   
+----------
+ 10000000
+(1 row)
+
+Time: 231.516 ms
+@@run count explain_analyze 5
+                                                       QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=169248.60..169248.61 rows=1 width=8) (actual time=732.608..732.609 rows=1 loops=1)
+   ->  Seq Scan on big  (cost=0.00..144248.48 rows=10000048 width=0) (actual time=0.006..406.941 rows=10000000 loops=1)
+ Planning Time: 0.037 ms
+ Execution Time: 732.632 ms
+(4 rows)
+
+Time: 732.998 ms
+@@run count timing_off 5
+                                             QUERY PLAN                                             
+----------------------------------------------------------------------------------------------------
+ Aggregate  (cost=169248.60..169248.61 rows=1 width=8) (actual rows=1 loops=1)
+   ->  Seq Scan on big  (cost=0.00..144248.48 rows=10000048 width=0) (actual rows=10000000 loops=1)
+ Planning Time: 0.046 ms
+ Execution Time: 259.993 ms
+(4 rows)
+
+Time: 260.362 ms
+@@run count plain 6
+  count   
+----------
+ 10000000
+(1 row)
+
+Time: 230.277 ms
+@@run count explain_analyze 6
+                                                       QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=169248.60..169248.61 rows=1 width=8) (actual time=742.034..742.035 rows=1 loops=1)
+   ->  Seq Scan on big  (cost=0.00..144248.48 rows=10000048 width=0) (actual time=0.006..411.744 rows=10000000 loops=1)
+ Planning Time: 0.046 ms
+ Execution Time: 742.059 ms
+(4 rows)
+
+Time: 742.411 ms
+@@run count timing_off 6
+                                             QUERY PLAN                                             
+----------------------------------------------------------------------------------------------------
+ Aggregate  (cost=169248.60..169248.61 rows=1 width=8) (actual rows=1 loops=1)
+   ->  Seq Scan on big  (cost=0.00..144248.48 rows=10000048 width=0) (actual rows=10000000 loops=1)
+ Planning Time: 0.047 ms
+ Execution Time: 259.922 ms
+(4 rows)
+
+Time: 260.227 ms
+RESET
+Time: 0.058 ms
+SET
+Time: 0.051 ms
+SET
+Time: 0.011 ms
+@@plan nestloop
+                                                                QUERY PLAN                                                                
+------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=488104.95..488104.96 rows=1 width=8) (actual time=2834.862..2834.864 rows=1 loops=1)
+   Buffers: shared hit=4004425
+   ->  Nested Loop  (cost=0.42..485604.95 rows=1000000 width=4) (actual time=0.047..2796.792 rows=1000000 loops=1)
+         Buffers: shared hit=4004425
+         ->  Seq Scan on outer_t o  (cost=0.00..14425.00 rows=1000000 width=4) (actual time=0.018..45.341 rows=1000000 loops=1)
+               Buffers: shared hit=4425
+         ->  Index Scan using inner_t_pkey on inner_t i  (cost=0.42..0.47 rows=1 width=8) (actual time=0.003..0.003 rows=1 loops=1000000)
+               Index Cond: (id = o.inner_id)
+               Buffers: shared hit=4000000
+ Planning:
+   Buffers: shared hit=125 read=2
+ Planning Time: 0.423 ms
+ Execution Time: 2834.899 ms
+(13 rows)
+
+Time: 2835.974 ms (00:02.836)
+@@run nestloop plain -2
+   sum    
+----------
+ 47999082
+(1 row)
+
+Time: 2700.538 ms (00:02.701)
+@@run nestloop explain_analyze -2
+                                                                QUERY PLAN                                                                
+------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=488104.95..488104.96 rows=1 width=8) (actual time=2879.172..2879.174 rows=1 loops=1)
+   ->  Nested Loop  (cost=0.42..485604.95 rows=1000000 width=4) (actual time=0.012..2842.943 rows=1000000 loops=1)
+         ->  Seq Scan on outer_t o  (cost=0.00..14425.00 rows=1000000 width=4) (actual time=0.005..44.677 rows=1000000 loops=1)
+         ->  Index Scan using inner_t_pkey on inner_t i  (cost=0.42..0.47 rows=1 width=8) (actual time=0.003..0.003 rows=1 loops=1000000)
+               Index Cond: (id = o.inner_id)
+ Planning Time: 0.109 ms
+ Execution Time: 2879.204 ms
+(7 rows)
+
+Time: 2879.735 ms (00:02.880)
+@@run nestloop timing_off -2
+                                                       QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=488104.95..488104.96 rows=1 width=8) (actual rows=1 loops=1)
+   ->  Nested Loop  (cost=0.42..485604.95 rows=1000000 width=4) (actual rows=1000000 loops=1)
+         ->  Seq Scan on outer_t o  (cost=0.00..14425.00 rows=1000000 width=4) (actual rows=1000000 loops=1)
+         ->  Index Scan using inner_t_pkey on inner_t i  (cost=0.42..0.47 rows=1 width=8) (actual rows=1 loops=1000000)
+               Index Cond: (id = o.inner_id)
+ Planning Time: 0.111 ms
+ Execution Time: 2489.289 ms
+(7 rows)
+
+Time: 2489.847 ms (00:02.490)
+@@run nestloop plain -1
+   sum    
+----------
+ 47999082
+(1 row)
+
+Time: 2770.118 ms (00:02.770)
+@@run nestloop explain_analyze -1
+                                                                QUERY PLAN                                                                
+------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=488104.95..488104.96 rows=1 width=8) (actual time=2820.492..2820.495 rows=1 loops=1)
+   ->  Nested Loop  (cost=0.42..485604.95 rows=1000000 width=4) (actual time=0.016..2785.240 rows=1000000 loops=1)
+         ->  Seq Scan on outer_t o  (cost=0.00..14425.00 rows=1000000 width=4) (actual time=0.007..43.035 rows=1000000 loops=1)
+         ->  Index Scan using inner_t_pkey on inner_t i  (cost=0.42..0.47 rows=1 width=8) (actual time=0.003..0.003 rows=1 loops=1000000)
+               Index Cond: (id = o.inner_id)
+ Planning Time: 0.117 ms
+ Execution Time: 2820.526 ms
+(7 rows)
+
+Time: 2821.054 ms (00:02.821)
+@@run nestloop timing_off -1
+                                                       QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=488104.95..488104.96 rows=1 width=8) (actual rows=1 loops=1)
+   ->  Nested Loop  (cost=0.42..485604.95 rows=1000000 width=4) (actual rows=1000000 loops=1)
+         ->  Seq Scan on outer_t o  (cost=0.00..14425.00 rows=1000000 width=4) (actual rows=1000000 loops=1)
+         ->  Index Scan using inner_t_pkey on inner_t i  (cost=0.42..0.47 rows=1 width=8) (actual rows=1 loops=1000000)
+               Index Cond: (id = o.inner_id)
+ Planning Time: 0.109 ms
+ Execution Time: 2640.285 ms
+(7 rows)
+
+Time: 2640.771 ms (00:02.641)
+@@run nestloop plain 0
+   sum    
+----------
+ 47999082
+(1 row)
+
+Time: 2320.904 ms (00:02.321)
+@@run nestloop explain_analyze 0
+                                                                QUERY PLAN                                                                
+------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=488104.95..488104.96 rows=1 width=8) (actual time=2706.473..2706.475 rows=1 loops=1)
+   ->  Nested Loop  (cost=0.42..485604.95 rows=1000000 width=4) (actual time=0.012..2671.468 rows=1000000 loops=1)
+         ->  Seq Scan on outer_t o  (cost=0.00..14425.00 rows=1000000 width=4) (actual time=0.006..43.756 rows=1000000 loops=1)
+         ->  Index Scan using inner_t_pkey on inner_t i  (cost=0.42..0.47 rows=1 width=8) (actual time=0.002..0.002 rows=1 loops=1000000)
+               Index Cond: (id = o.inner_id)
+ Planning Time: 0.113 ms
+ Execution Time: 2706.505 ms
+(7 rows)
+
+Time: 2706.998 ms (00:02.707)
+@@run nestloop timing_off 0
+                                                       QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=488104.95..488104.96 rows=1 width=8) (actual rows=1 loops=1)
+   ->  Nested Loop  (cost=0.42..485604.95 rows=1000000 width=4) (actual rows=1000000 loops=1)
+         ->  Seq Scan on outer_t o  (cost=0.00..14425.00 rows=1000000 width=4) (actual rows=1000000 loops=1)
+         ->  Index Scan using inner_t_pkey on inner_t i  (cost=0.42..0.47 rows=1 width=8) (actual rows=1 loops=1000000)
+               Index Cond: (id = o.inner_id)
+ Planning Time: 0.108 ms
+ Execution Time: 2391.944 ms
+(7 rows)
+
+Time: 2392.393 ms (00:02.392)
+@@run nestloop plain 1
+   sum    
+----------
+ 47999082
+(1 row)
+
+Time: 2293.264 ms (00:02.293)
+@@run nestloop explain_analyze 1
+                                                                QUERY PLAN                                                                
+------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=488104.95..488104.96 rows=1 width=8) (actual time=2387.744..2387.746 rows=1 loops=1)
+   ->  Nested Loop  (cost=0.42..485604.95 rows=1000000 width=4) (actual time=0.011..2352.372 rows=1000000 loops=1)
+         ->  Seq Scan on outer_t o  (cost=0.00..14425.00 rows=1000000 width=4) (actual time=0.006..44.074 rows=1000000 loops=1)
+         ->  Index Scan using inner_t_pkey on inner_t i  (cost=0.42..0.47 rows=1 width=8) (actual time=0.002..0.002 rows=1 loops=1000000)
+               Index Cond: (id = o.inner_id)
+ Planning Time: 0.118 ms
+ Execution Time: 2387.774 ms
+(7 rows)
+
+Time: 2388.382 ms (00:02.388)
+@@run nestloop timing_off 1
+                                                       QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=488104.95..488104.96 rows=1 width=8) (actual rows=1 loops=1)
+   ->  Nested Loop  (cost=0.42..485604.95 rows=1000000 width=4) (actual rows=1000000 loops=1)
+         ->  Seq Scan on outer_t o  (cost=0.00..14425.00 rows=1000000 width=4) (actual rows=1000000 loops=1)
+         ->  Index Scan using inner_t_pkey on inner_t i  (cost=0.42..0.47 rows=1 width=8) (actual rows=1 loops=1000000)
+               Index Cond: (id = o.inner_id)
+ Planning Time: 0.113 ms
+ Execution Time: 2492.695 ms
+(7 rows)
+
+Time: 2493.722 ms (00:02.494)
+@@run nestloop plain 2
+   sum    
+----------
+ 47999082
+(1 row)
+
+Time: 2299.467 ms (00:02.299)
+@@run nestloop explain_analyze 2
+                                                                QUERY PLAN                                                                
+------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=488104.95..488104.96 rows=1 width=8) (actual time=2802.137..2802.139 rows=1 loops=1)
+   ->  Nested Loop  (cost=0.42..485604.95 rows=1000000 width=4) (actual time=0.011..2765.849 rows=1000000 loops=1)
+         ->  Seq Scan on outer_t o  (cost=0.00..14425.00 rows=1000000 width=4) (actual time=0.006..44.122 rows=1000000 loops=1)
+         ->  Index Scan using inner_t_pkey on inner_t i  (cost=0.42..0.47 rows=1 width=8) (actual time=0.002..0.002 rows=1 loops=1000000)
+               Index Cond: (id = o.inner_id)
+ Planning Time: 0.116 ms
+ Execution Time: 2802.171 ms
+(7 rows)
+
+Time: 2802.651 ms (00:02.803)
+@@run nestloop timing_off 2
+                                                       QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=488104.95..488104.96 rows=1 width=8) (actual rows=1 loops=1)
+   ->  Nested Loop  (cost=0.42..485604.95 rows=1000000 width=4) (actual rows=1000000 loops=1)
+         ->  Seq Scan on outer_t o  (cost=0.00..14425.00 rows=1000000 width=4) (actual rows=1000000 loops=1)
+         ->  Index Scan using inner_t_pkey on inner_t i  (cost=0.42..0.47 rows=1 width=8) (actual rows=1 loops=1000000)
+               Index Cond: (id = o.inner_id)
+ Planning Time: 0.118 ms
+ Execution Time: 2689.278 ms
+(7 rows)
+
+Time: 2690.180 ms (00:02.690)
+@@run nestloop plain 3
+   sum    
+----------
+ 47999082
+(1 row)
+
+Time: 2631.145 ms (00:02.631)
+@@run nestloop explain_analyze 3
+                                                                QUERY PLAN                                                                
+------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=488104.95..488104.96 rows=1 width=8) (actual time=2765.655..2765.657 rows=1 loops=1)
+   ->  Nested Loop  (cost=0.42..485604.95 rows=1000000 width=4) (actual time=0.012..2729.667 rows=1000000 loops=1)
+         ->  Seq Scan on outer_t o  (cost=0.00..14425.00 rows=1000000 width=4) (actual time=0.006..44.820 rows=1000000 loops=1)
+         ->  Index Scan using inner_t_pkey on inner_t i  (cost=0.42..0.47 rows=1 width=8) (actual time=0.002..0.002 rows=1 loops=1000000)
+               Index Cond: (id = o.inner_id)
+ Planning Time: 0.118 ms
+ Execution Time: 2765.697 ms
+(7 rows)
+
+Time: 2766.310 ms (00:02.766)
+@@run nestloop timing_off 3
+                                                       QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=488104.95..488104.96 rows=1 width=8) (actual rows=1 loops=1)
+   ->  Nested Loop  (cost=0.42..485604.95 rows=1000000 width=4) (actual rows=1000000 loops=1)
+         ->  Seq Scan on outer_t o  (cost=0.00..14425.00 rows=1000000 width=4) (actual rows=1000000 loops=1)
+         ->  Index Scan using inner_t_pkey on inner_t i  (cost=0.42..0.47 rows=1 width=8) (actual rows=1 loops=1000000)
+               Index Cond: (id = o.inner_id)
+ Planning Time: 0.117 ms
+ Execution Time: 2768.494 ms
+(7 rows)
+
+Time: 2769.205 ms (00:02.769)
+@@run nestloop plain 4
+   sum    
+----------
+ 47999082
+(1 row)
+
+Time: 2850.655 ms (00:02.851)
+@@run nestloop explain_analyze 4
+                                                                QUERY PLAN                                                                
+------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=488104.95..488104.96 rows=1 width=8) (actual time=2948.276..2948.278 rows=1 loops=1)
+   ->  Nested Loop  (cost=0.42..485604.95 rows=1000000 width=4) (actual time=0.023..2911.713 rows=1000000 loops=1)
+         ->  Seq Scan on outer_t o  (cost=0.00..14425.00 rows=1000000 width=4) (actual time=0.011..44.364 rows=1000000 loops=1)
+         ->  Index Scan using inner_t_pkey on inner_t i  (cost=0.42..0.47 rows=1 width=8) (actual time=0.003..0.003 rows=1 loops=1000000)
+               Index Cond: (id = o.inner_id)
+ Planning Time: 0.130 ms
+ Execution Time: 2948.311 ms
+(7 rows)
+
+Time: 2948.870 ms (00:02.949)
+@@run nestloop timing_off 4
+                                                       QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=488104.95..488104.96 rows=1 width=8) (actual rows=1 loops=1)
+   ->  Nested Loop  (cost=0.42..485604.95 rows=1000000 width=4) (actual rows=1000000 loops=1)
+         ->  Seq Scan on outer_t o  (cost=0.00..14425.00 rows=1000000 width=4) (actual rows=1000000 loops=1)
+         ->  Index Scan using inner_t_pkey on inner_t i  (cost=0.42..0.47 rows=1 width=8) (actual rows=1 loops=1000000)
+               Index Cond: (id = o.inner_id)
+ Planning Time: 0.130 ms
+ Execution Time: 2590.704 ms
+(7 rows)
+
+Time: 2591.290 ms (00:02.591)
+@@run nestloop plain 5
+   sum    
+----------
+ 47999082
+(1 row)
+
+Time: 2718.176 ms (00:02.718)
+@@run nestloop explain_analyze 5
+                                                                QUERY PLAN                                                                
+------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=488104.95..488104.96 rows=1 width=8) (actual time=3153.295..3153.297 rows=1 loops=1)
+   ->  Nested Loop  (cost=0.42..485604.95 rows=1000000 width=4) (actual time=0.014..3116.150 rows=1000000 loops=1)
+         ->  Seq Scan on outer_t o  (cost=0.00..14425.00 rows=1000000 width=4) (actual time=0.007..45.321 rows=1000000 loops=1)
+         ->  Index Scan using inner_t_pkey on inner_t i  (cost=0.42..0.47 rows=1 width=8) (actual time=0.003..0.003 rows=1 loops=1000000)
+               Index Cond: (id = o.inner_id)
+ Planning Time: 0.122 ms
+ Execution Time: 3153.328 ms
+(7 rows)
+
+Time: 3153.881 ms (00:03.154)
+@@run nestloop timing_off 5
+                                                       QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=488104.95..488104.96 rows=1 width=8) (actual rows=1 loops=1)
+   ->  Nested Loop  (cost=0.42..485604.95 rows=1000000 width=4) (actual rows=1000000 loops=1)
+         ->  Seq Scan on outer_t o  (cost=0.00..14425.00 rows=1000000 width=4) (actual rows=1000000 loops=1)
+         ->  Index Scan using inner_t_pkey on inner_t i  (cost=0.42..0.47 rows=1 width=8) (actual rows=1 loops=1000000)
+               Index Cond: (id = o.inner_id)
+ Planning Time: 0.118 ms
+ Execution Time: 2870.684 ms
+(7 rows)
+
+Time: 2871.241 ms (00:02.871)
+@@run nestloop plain 6
+   sum    
+----------
+ 47999082
+(1 row)
+
+Time: 2608.534 ms (00:02.609)
+@@run nestloop explain_analyze 6
+                                                                QUERY PLAN                                                                
+------------------------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=488104.95..488104.96 rows=1 width=8) (actual time=2843.483..2843.486 rows=1 loops=1)
+   ->  Nested Loop  (cost=0.42..485604.95 rows=1000000 width=4) (actual time=0.044..2806.737 rows=1000000 loops=1)
+         ->  Seq Scan on outer_t o  (cost=0.00..14425.00 rows=1000000 width=4) (actual time=0.017..45.564 rows=1000000 loops=1)
+         ->  Index Scan using inner_t_pkey on inner_t i  (cost=0.42..0.47 rows=1 width=8) (actual time=0.003..0.003 rows=1 loops=1000000)
+               Index Cond: (id = o.inner_id)
+ Planning Time: 0.127 ms
+ Execution Time: 2843.524 ms
+(7 rows)
+
+Time: 2844.397 ms (00:02.844)
+@@run nestloop timing_off 6
+                                                       QUERY PLAN                                                       
+------------------------------------------------------------------------------------------------------------------------
+ Aggregate  (cost=488104.95..488104.96 rows=1 width=8) (actual rows=1 loops=1)
+   ->  Nested Loop  (cost=0.42..485604.95 rows=1000000 width=4) (actual rows=1000000 loops=1)
+         ->  Seq Scan on outer_t o  (cost=0.00..14425.00 rows=1000000 width=4) (actual rows=1000000 loops=1)
+         ->  Index Scan using inner_t_pkey on inner_t i  (cost=0.42..0.47 rows=1 width=8) (actual rows=1 loops=1000000)
+               Index Cond: (id = o.inner_id)
+ Planning Time: 0.115 ms
+ Execution Time: 2449.085 ms
+(7 rows)
+
+Time: 2449.622 ms (00:02.450)
