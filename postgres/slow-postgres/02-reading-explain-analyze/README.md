@@ -1,6 +1,6 @@
 # Reading Postgres EXPLAIN ANALYZE when the planner expects 300 rows and gets 15,000
 
-Code and raw numbers for part 2 of Slow Postgres. The article link goes here once it's live.
+Code and raw numbers for part 2 of Slow Postgres. The article is [on HackerNoon](https://hackernoon.com/reading-postgres-explain-analyze-when-the-planner-expects-300-rows-and-gets-15000).
 
 ![count(*) over 10 million rows, plain against EXPLAIN ANALYZE](charts/overhead.svg)
 
